@@ -22,32 +22,33 @@ const legalLinks = [
 
 export function Footer() {
   return (
-    <footer id="footer" className="bg-zinc-950 py-20 rounded-[40px] m-4 sm:m-6 lg:m-8 overflow-hidden text-white/80">
+    <footer
+      id="footer"
+      className="bg-[#ffffff] shadow-sm py-20 rounded-t-[40px] mt-4 sm:mt-6 lg:mt-8 overflow-hidden text-[#40351F]/70"
+    >
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-16 border-b border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-16 border-b border-[#40351F]/10">
           {/* Brand and Description */}
           <div className="md:col-span-5 space-y-6">
             <div className="flex items-center gap-2">
-               <div className="grid grid-cols-2 gap-[1px]">
-                  <div className="w-2.5 h-2.5 bg-white rounded-tl-[2px] rounded-bl-[2px]" />
-                  <div className="w-2.5 h-2.5 bg-white rounded-tr-[2px] rounded-br-[2px]" />
-                  <div className="w-2.5 h-2.5 bg-white rounded-bl-[2px] rounded-br-[2px]" />
-                  <div className="w-2.5 h-2.5 bg-white rounded-br-[2px] rounded-bl-[2px]" />
-               </div>
-               <span className="text-[18px] font-serif text-white font-semibold">ResumeAI</span>
+              <img src="./file.svg" alt="logo" />
+              <span className="text-[18px] font-sans text-[#40351F] font-semibold tracking-tight">
+                TwelveMei
+              </span>
             </div>
             <p className="text-[14px] font-normal leading-relaxed max-w-[280px]">
-              The intelligent ATS optimization platform that helps you land more interviews.
+              The intelligent ATS optimization platform that helps you land more
+              interviews.
             </p>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[12px] bg-white/5 border border-white/10 text-[11px] font-medium text-white">
-              <span className="size-1.5 rounded-full bg-[#7DA154]"></span>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[12px] bg-white border border-[#40351F]/10 text-[11px] font-medium text-[#40351F]">
+              <span className="size-1.5 rounded-full bg-[#087D9D]"></span>
               <span>All systems operational</span>
             </div>
           </div>
 
           {/* Navigation Links */}
           <div className="md:col-span-2">
-            <h4 className="text-[12px] font-bold uppercase tracking-wider text-white mb-6">
+            <h4 className="text-[12px] font-bold uppercase tracking-wider text-[#40351F] mb-6">
               Product
             </h4>
             <ul className="space-y-3">
@@ -55,7 +56,7 @@ export function Footer() {
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    className="text-[13px] hover:text-white transition-colors"
+                    className="text-[13px] hover:text-[#087D9D] transition-colors"
                   >
                     {link.label}
                   </a>
@@ -66,7 +67,7 @@ export function Footer() {
 
           {/* Resources */}
           <div className="md:col-span-2">
-            <h4 className="text-[12px] font-bold uppercase tracking-wider text-white mb-6">
+            <h4 className="text-[12px] font-bold uppercase tracking-wider text-[#40351F] mb-6">
               Resources
             </h4>
             <ul className="space-y-3">
@@ -74,7 +75,7 @@ export function Footer() {
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    className="text-[13px] hover:text-white transition-colors"
+                    className="text-[13px] hover:text-[#087D9D] transition-colors"
                   >
                     {link.label}
                   </a>
@@ -85,7 +86,7 @@ export function Footer() {
 
           {/* Legal */}
           <div className="md:col-span-3">
-            <h4 className="text-[12px] font-bold uppercase tracking-wider text-white mb-6">
+            <h4 className="text-[12px] font-bold uppercase tracking-wider text-[#40351F] mb-6">
               Legal
             </h4>
             <ul className="space-y-3">
@@ -93,7 +94,7 @@ export function Footer() {
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    className="text-[13px] hover:text-white transition-colors"
+                    className="text-[13px] hover:text-[#087D9D] transition-colors"
                   >
                     {link.label}
                   </a>
@@ -105,13 +106,16 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[12px]">
-          <p>© {new Date().getFullYear()} ResumeAI. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} TwelveMei. All rights reserved.</p>
           <div className="flex items-center gap-4">
-            <a href="#privacy" className="hover:text-white transition-colors">
+            <a
+              href="#privacy"
+              className="hover:text-[#087D9D] transition-colors"
+            >
               Privacy
             </a>
             <span>•</span>
-            <a href="#terms" className="hover:text-white transition-colors">
+            <a href="#terms" className="hover:text-[#087D9D] transition-colors">
               Terms
             </a>
           </div>
@@ -120,4 +124,3 @@ export function Footer() {
     </footer>
   );
 }
-

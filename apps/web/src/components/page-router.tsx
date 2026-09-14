@@ -22,7 +22,7 @@ export function PageRouter() {
       setCurrentHash(window.location.hash);
       window.scrollTo(0, 0); // scroll to top when changing page views
     };
-    
+
     window.addEventListener("hashchange", onHashChange);
     return () => window.removeEventListener("hashchange", onHashChange);
   }, []);

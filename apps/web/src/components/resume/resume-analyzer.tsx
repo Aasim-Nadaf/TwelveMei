@@ -73,7 +73,9 @@ Financial Modeling, DCF Valuation, Treasury Operations, SQL, Python, Bloomberg T
 
 export function ResumeAnalyzer() {
   const { user, isAuthenticated } = useAuth();
-  const [activeInputTab, setActiveInputTab] = useState<"upload" | "paste">("upload");
+  const [activeInputTab, setActiveInputTab] = useState<"upload" | "paste">(
+    "upload",
+  );
   const [resumeText, setResumeText] = useState("");
   const [fileName, setFileName] = useState<string | null>(null);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
@@ -101,7 +103,9 @@ export function ResumeAnalyzer() {
   const [activeResultTab, setActiveResultTab] = useState<
     "flaws" | "improvements" | "keywords" | "breakdown" | "profile"
   >("flaws");
-  const [flawFilter, setFlawFilter] = useState<"all" | "high" | "medium" | "low">("all");
+  const [flawFilter, setFlawFilter] = useState<
+    "all" | "high" | "medium" | "low"
+  >("all");
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -131,7 +135,9 @@ export function ResumeAnalyzer() {
     setError(null);
     setHasSavedCurrent(false);
 
-    const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+    const isPdf =
+      file.type === "application/pdf" ||
+      file.name.toLowerCase().endsWith(".pdf");
     const mime = isPdf ? "application/pdf" : file.type || "text/plain";
     setFileMimeType(mime);
 
@@ -146,7 +152,13 @@ export function ResumeAnalyzer() {
     base64Reader.readAsDataURL(file);
 
     // For plain text files, read text
-    if (!isPdf && (file.type.startsWith("text/") || file.name.endsWith(".txt") || file.name.endsWith(".md") || file.name.endsWith(".rtf"))) {
+    if (
+      !isPdf &&
+      (file.type.startsWith("text/") ||
+        file.name.endsWith(".txt") ||
+        file.name.endsWith(".md") ||
+        file.name.endsWith(".rtf"))
+    ) {
       const textReader = new FileReader();
       textReader.onload = (e) => {
         const content = e.target?.result as string;
@@ -193,14 +205,23 @@ export function ResumeAnalyzer() {
   };
 
   const loadSample = (type: "engineer" | "fintech") => {
-    const sample = type === "engineer" ? SAMPLE_ENGINEER_RESUME : SAMPLE_FINTECH_RESUME;
+    const sample =
+      type === "engineer" ? SAMPLE_ENGINEER_RESUME : SAMPLE_FINTECH_RESUME;
     setResumeText(sample);
     setUploadedFile(null);
     setFileBase64(null);
     setFileMimeType("text/plain");
     setFileSizeStr("2.4 KB");
-    setFileName(type === "engineer" ? "sample_software_engineer_resume.txt" : "sample_fintech_analyst_resume.txt");
-    setTargetRole(type === "engineer" ? "Senior Full-Stack Software Engineer" : "Senior Financial Analyst");
+    setFileName(
+      type === "engineer"
+        ? "sample_software_engineer_resume.txt"
+        : "sample_fintech_analyst_resume.txt",
+    );
+    setTargetRole(
+      type === "engineer"
+        ? "Senior Full-Stack Software Engineer"
+        : "Senior Financial Analyst",
+    );
   };
 
   const saveCurrentScan = async (overrideResult?: ResumeAnalysisResult) => {
@@ -295,8 +316,13 @@ export function ResumeAnalyzer() {
       });
 
       if (!response.ok) {
-        const errJson = await response.json().catch(() => ({ error: "Analysis failed" }));
-        throw new Error(errJson.error || "Analysis failed. Please check your resume and try again.");
+        const errJson = await response
+          .json()
+          .catch(() => ({ error: "Analysis failed" }));
+        throw new Error(
+          errJson.error ||
+            "Analysis failed. Please check your resume and try again.",
+        );
       }
 
       const data: ResumeAnalysisResult = await response.json();
@@ -305,7 +331,9 @@ export function ResumeAnalyzer() {
       saveCurrentScan(data);
     } catch (err: unknown) {
       console.error(err);
-      setError(err instanceof Error ? err.message : "Failed to analyze resume.");
+      setError(
+        err instanceof Error ? err.message : "Failed to analyze resume.",
+      );
     } finally {
       clearInterval(stepInterval);
       setIsAnalyzing(false);
@@ -334,265 +362,129 @@ export function ResumeAnalyzer() {
   };
 
   const filteredFlaws =
-    result?.flaws.filter((f) => (flawFilter === "all" ? true : f.severity === flawFilter)) || [];
+    result?.flaws.filter((f) =>
+      flawFilter === "all" ? true : f.severity === flawFilter,
+    ) || [];
 
   return (
-    <section id="analyzer" className="py-24 sm:py-32 border-t border-black/5 bg-[#FBFBFC]">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[16px] bg-[#F8F9F9] border border-black/5 text-[12px] font-semibold text-[#555555] mb-6 shadow-sm">
-            <span className="flex size-4 items-center justify-center rounded-full bg-[#E5ECE0] text-[#7DA154]">
-              <Sparkles className="size-2.5 stroke-[3]" />
-            </span>
-            <span>AI-Powered ATS Score & Flaw Audit</span>
+    <section
+      id="analyzer"
+      className="py-24 sm:py-32 border-t border-[#40351F]/10 bg-[#FFF0C4]/30"
+    >
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        {/* Centered Section Header */}
+        {!result && (
+          <div className="text-center max-w-3xl mx-auto mb-16 pt-8">
+            <h2 className="text-[3rem] sm:text-[4rem] font-serif text-[#40351F] tracking-tight leading-[1.1] mb-6">
+              Ready for your next role?
+            </h2>
+            <p className="text-[18px] text-[#40351F]/70 font-normal leading-relaxed">
+              Paste your resume below or upload a document to get an instant
+              AI-powered ATS analysis.
+            </p>
+            {isAuthenticated && user && (
+              <div className="mt-8 inline-flex items-center gap-2 px-4 py-2 rounded-[16px] bg-white border border-[#40351F]/10 text-[13px] font-medium text-[#40351F]/70 shadow-sm">
+                <span className="size-2 rounded-full bg-[#087D9D] animate-pulse" />
+                <span>
+                  Analyzing as <strong>{user.name}</strong> ({user.role})
+                </span>
+              </div>
+            )}
           </div>
+        )}
 
-          <h2 className="text-[2.5rem] sm:text-[3.5rem] font-serif text-[#111111] tracking-tight leading-tight mb-6">
-            Analyze & optimize your<br className="hidden sm:block" /> resume with AI.
-          </h2>
-          <p className="text-[16px] sm:text-[18px] text-[#555555] font-normal leading-relaxed">
-            Upload your resume to receive instantaneous ATS compatibility scoring,
-            automated flaw audits, high-impact bullet point rewrites, and keyword gap analysis.
-          </p>
-
-          {/* User state badge */}
-          {isAuthenticated && user && (
-            <div className="mt-8 inline-flex items-center gap-2 px-4 py-2 rounded-[16px] bg-white border border-black/5 text-[13px] font-medium text-[#555555] shadow-sm">
-              <span className="size-2 rounded-full bg-[#7DA154] animate-pulse" />
-              <span>Analyzing as <strong>{user.name}</strong> ({user.role})</span>
-            </div>
-          )}
-        </div>
-
-        {/* MAIN WORKSPACE */}
         {!result ? (
-          <div className="max-w-4xl mx-auto">
-            {/* Input Container */}
-            <div className="rounded-[32px] bg-white p-8 sm:p-12 border border-black/5 shadow-sm">
-              {/* Tab Selector & Quick Load Sample */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8 pb-6 border-b border-black/5">
-                <div className="inline-flex items-center bg-[#F8F9F9] p-1.5 rounded-[20px] border border-black/5">
-                  <button
-                    type="button"
-                    onClick={() => setActiveInputTab("upload")}
-                    className={`px-5 py-2.5 rounded-[16px] text-[13px] font-semibold transition-all cursor-pointer ${
-                      activeInputTab === "upload"
-                        ? "bg-white text-[#111111] shadow-sm border border-black/5"
-                        : "text-[#A0A0A0] hover:text-[#111111]"
-                    }`}
-                  >
-                    Upload File
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActiveInputTab("paste")}
-                    className={`px-5 py-2.5 rounded-[16px] text-[13px] font-semibold transition-all cursor-pointer ${
-                      activeInputTab === "paste"
-                        ? "bg-white text-[#111111] shadow-sm border border-black/5"
-                        : "text-[#A0A0A0] hover:text-[#111111]"
-                    }`}
-                  >
-                    Paste Text
-                  </button>
-                </div>
+          <div className="w-full max-w-4xl mx-auto">
+            {/* Unified Smart Input Block */}
+            <div className="rounded-[40px] bg-white border border-[#40351F]/10 shadow-[0_20px_60px_-15px_rgba(64,53,31,0.1)] flex flex-col overflow-hidden relative">
+              {/* Unified Smart Input Block Content */}
+              <div className="relative">
+                <textarea
+                  rows={10}
+                  value={resumeText}
+                  onChange={(e) => setResumeText(e.target.value)}
+                  placeholder="Paste your resume text here..."
+                  className="w-full bg-transparent border-none p-10 sm:p-14 text-lg sm:text-2xl font-serif resize-none focus:ring-0 placeholder:text-[#40351F]/30 text-[#40351F] leading-relaxed outline-none"
+                />
 
-                {/* Sample Resumes & Saved Scans */}
-                <div className="flex flex-wrap items-center gap-3">
+                {/* Floating Quick Actions (Top Right) */}
+                <div className="absolute top-6 right-6 flex items-center gap-2">
                   {savedScans.length > 0 && (
                     <button
                       type="button"
                       onClick={() => setShowSavedModal(true)}
-                      className="text-[13px] font-semibold px-4 py-2 rounded-[16px] bg-[#111111] text-white hover:bg-[#2A2B2D] transition cursor-pointer flex items-center gap-2"
+                      className="px-4 py-2 rounded-full bg-[#FFF0C4] text-[#40351F] hover:bg-[#FFF0C4]/80 text-[13px] font-bold transition flex items-center gap-2 shadow-sm cursor-pointer"
                     >
-                      <History className="size-4 text-[#7DA154]" />
-                      <span>Saved Scans ({savedScans.length})</span>
+                      <History className="size-4 text-[#D98A12]" />
+                      Saved Scans
                     </button>
                   )}
-                  <span className="text-[13px] text-[#A0A0A0] font-medium">Quick Test:</span>
                   <button
                     type="button"
                     onClick={() => loadSample("engineer")}
-                    className="text-[13px] font-semibold px-4 py-2 rounded-[16px] bg-[#E5ECE0] text-[#4A6430] hover:bg-[#d8e2d2] transition cursor-pointer"
+                    className="hidden sm:block px-4 py-2 rounded-full bg-[#40351F]/5 text-[#40351F]/60 hover:text-[#40351F] hover:bg-[#40351F]/10 text-[13px] font-bold transition cursor-pointer"
                   >
-                    Tech Resume
+                    Load Sample
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => loadSample("fintech")}
-                    className="text-[13px] font-semibold px-4 py-2 rounded-[16px] bg-[#F8F9F9] border border-black/5 text-[#555555] hover:bg-zinc-50 transition cursor-pointer"
-                  >
-                    Finance Resume
-                  </button>
+                </div>
+
+                {/* Character Count */}
+                <div className="absolute bottom-6 right-6 text-xs text-[#40351F]/30 font-medium">
+                  {resumeText.length} characters
                 </div>
               </div>
 
-              {/* Upload Dropzone */}
-              {activeInputTab === "upload" ? (
-                <div className="relative">
-                  <input
-                    id="resume-file-input"
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".pdf,.doc,.docx,.txt,.md,application/pdf,text/plain"
-                    onChange={handleFileUpload}
-                    className="hidden"
-                    tabIndex={-1}
-                    aria-hidden="true"
-                  />
-
-                  {fileName ? (
-                    <div className="border border-black/5 bg-[#F8F9F9] rounded-[24px] p-8 sm:p-12 text-center flex flex-col items-center gap-4 shadow-sm">
-                      <div className="size-16 rounded-[20px] bg-[#E5ECE0] text-[#7DA154] flex items-center justify-center">
-                        <CheckCircle2 className="size-8" />
-                      </div>
-                      <div>
-                        <h4 className="text-[16px] font-semibold text-[#111111] flex flex-wrap items-center justify-center gap-3">
-                          <span>{fileName}</span>
-                          {fileSizeStr && (
-                            <span className="text-[12px] px-2.5 py-1 rounded-[8px] bg-white text-[#A0A0A0] border border-black/5 font-medium">
-                              {fileSizeStr}
-                            </span>
-                          )}
-                        </h4>
-                        <p className="text-[13px] text-[#888888] mt-2">
-                          File loaded successfully • Click &quot;Analyze Resume&quot; below
-                        </p>
-                      </div>
-
-                      <div className="flex flex-wrap items-center justify-center gap-3 mt-4">
-                        <button
-                          type="button"
-                          onClick={() => fileInputRef.current?.click()}
-                          className="px-5 py-2.5 rounded-[16px] text-[13px] font-semibold bg-white border border-black/5 text-[#111111] hover:bg-zinc-50 transition shadow-sm cursor-pointer inline-flex items-center gap-2"
-                        >
-                          <Upload className="size-4" />
-                          <span>Change File</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={handleReset}
-                          className="px-4 py-2.5 text-[13px] font-semibold text-rose-600 hover:text-rose-700 transition cursor-pointer"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div
-                      onClick={() => fileInputRef.current?.click()}
-                      onDragOver={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setIsDragging(true);
-                      }}
-                      onDragEnter={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setIsDragging(true);
-                      }}
-                      onDragLeave={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setIsDragging(false);
-                      }}
-                      onDrop={handleDrop}
-                      className={`group block border-2 border-dashed rounded-[24px] p-12 sm:p-16 text-center cursor-pointer transition-all ${
-                        isDragging
-                          ? "border-[#7DA154] bg-[#E5ECE0]/30 scale-[1.01]"
-                          : "border-black/10 hover:border-black/20 bg-[#FBFBFC] hover:bg-[#F8F9F9]"
-                      }`}
-                    >
-                      <div className="flex flex-col items-center gap-4">
-                        <div className={`size-16 rounded-[20px] flex items-center justify-center transition-colors shadow-sm ${
-                          isDragging ? "bg-[#7DA154] text-white" : "bg-white border border-black/5 group-hover:bg-[#E5ECE0] text-[#111111] group-hover:text-[#4A6430]"
-                        }`}>
-                          <Upload className="size-6" />
-                        </div>
-                        <h4 className="text-[16px] font-semibold text-[#111111]">
-                          {isDragging ? "Drop your resume file here!" : "Click to browse or drag & drop"}
-                        </h4>
-                        <p className="text-[13px] text-[#888888] max-w-sm">
-                          Supports PDF, DOCX, TXT, or Markdown documents (up to 20MB)
-                        </p>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            fileInputRef.current?.click();
-                          }}
-                          className="mt-4 inline-flex items-center gap-2 px-6 py-3 rounded-[16px] text-[13px] font-semibold bg-[#111111] text-white hover:bg-[#2A2B2D] shadow-sm transition cursor-pointer"
-                        >
-                          <Upload className="size-4" />
-                          <span>Select Document</span>
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div>
-                  <textarea
-                    rows={8}
-                    value={resumeText}
-                    onChange={(e) => setResumeText(e.target.value)}
-                    placeholder="Paste the full text of your resume here (Summary, Work Experience, Skills, Education)..."
-                    className="w-full p-4 rounded-2xl border border-black/[0.1] text-xs font-mono leading-relaxed bg-white text-[#111111] placeholder:text-zinc-400 focus:outline-hidden focus:border-[#111111] focus:ring-1 focus:ring-[#111111]"
-                  />
-                  <div className="flex items-center justify-between text-xs text-zinc-400 mt-1.5 px-1">
-                    <span>{resumeText.length} characters</span>
-                    {resumeText && (
-                      <button
-                        type="button"
-                        onClick={() => setResumeText("")}
-                        className="text-zinc-500 hover:text-black"
-                      >
-                        Clear text
-                      </button>
-                    )}
-                  </div>
-                </div>
-              )}
+              {/* Hidden Input */}
+              <input
+                id="resume-file-input"
+                ref={fileInputRef}
+                type="file"
+                accept=".pdf,.doc,.docx,.txt,.md,application/pdf,text/plain"
+                onChange={handleFileUpload}
+                className="hidden"
+                tabIndex={-1}
+                aria-hidden="true"
+              />
 
               {/* Optional Target Job Settings Accordion */}
-              <div className="mt-5 pt-4 border-t border-zinc-100">
+              <div className="px-10 sm:px-14 pb-6">
                 <button
                   type="button"
                   onClick={() => setShowJobDetails(!showJobDetails)}
-                  className="flex items-center gap-2 text-xs font-semibold text-[#111111] hover:text-emerald-800 transition cursor-pointer"
+                  className="flex items-center gap-2 text-[13px] font-bold text-[#40351F]/60 hover:text-[#087D9D] transition cursor-pointer"
                 >
                   <ChevronRight
-                    className={`size-3.5 transition-transform ${
+                    className={`size-4 transition-transform ${
                       showJobDetails ? "rotate-90" : ""
                     }`}
                   />
-                  <span>Target Role & Job Description (Recommended for precision scoring)</span>
+                  <span>Target Role Settings (Optional for precision)</span>
                 </button>
 
                 {showJobDetails && (
-                  <div className="mt-3 space-y-3 pt-2">
+                  <div className="mt-4 space-y-4 pt-4 border-t border-[#40351F]/10 animate-in fade-in slide-in-from-top-2">
                     <div>
-                      <label className="block text-xs font-medium text-zinc-600 mb-1">
+                      <label className="block text-[13px] font-bold text-[#40351F] mb-1.5">
                         Target Job Title
                       </label>
                       <input
                         type="text"
                         value={targetRole}
                         onChange={(e) => setTargetRole(e.target.value)}
-                        placeholder="e.g. Senior Full-Stack Engineer or Fintech Analyst"
-                        className="w-full px-3.5 py-2 rounded-xl border border-black/[0.1] text-xs text-[#111111] placeholder:text-zinc-400 focus:outline-hidden focus:border-[#111111]"
+                        placeholder="e.g. Senior Full-Stack Engineer"
+                        className="w-full px-4 py-3 rounded-2xl border border-[#40351F]/10 text-[14px] text-[#40351F] placeholder:text-[#40351F]/30 focus:outline-hidden focus:border-[#087D9D] focus:ring-1 focus:ring-[#087D9D] bg-[#F8F9F9]"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-zinc-600 mb-1">
-                        Target Job Description / Key Requirements (optional)
+                      <label className="block text-[13px] font-bold text-[#40351F] mb-1.5">
+                        Job Description Requirements
                       </label>
                       <textarea
                         rows={3}
                         value={jobDescription}
                         onChange={(e) => setJobDescription(e.target.value)}
-                        placeholder="Paste requirements, responsibilities, or must-have skills from job post..."
-                        className="w-full px-3.5 py-2 rounded-xl border border-black/[0.1] text-xs text-[#111111] placeholder:text-zinc-400 focus:outline-hidden focus:border-[#111111]"
+                        placeholder="Paste must-have skills from job post..."
+                        className="w-full px-4 py-3 rounded-2xl border border-[#40351F]/10 text-[14px] text-[#40351F] placeholder:text-[#40351F]/30 focus:outline-hidden focus:border-[#087D9D] focus:ring-1 focus:ring-[#087D9D] bg-[#F8F9F9] resize-none"
                       />
                     </div>
                   </div>
@@ -601,30 +493,59 @@ export function ResumeAnalyzer() {
 
               {/* Error Callout */}
               {error && (
-                <div className="mt-4 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
-                  <AlertTriangle className="size-4 shrink-0" />
+                <div className="mx-10 sm:mx-14 mb-6 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-[13px] font-medium flex items-center gap-3">
+                  <AlertTriangle className="size-5 shrink-0" />
                   <span>{error}</span>
                 </div>
               )}
 
-              {/* Submit Button */}
-              <div className="mt-6">
+              {/* Action Bar (Bottom) */}
+              <div className="bg-[#FFF0C4]/60 border-t border-[#40351F]/10 p-4 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-4 w-full sm:w-auto">
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-4 rounded-[24px] bg-white text-[#40351F] hover:bg-white/80 font-bold transition shadow-sm text-[14px] cursor-pointer"
+                  >
+                    <Upload className="size-5 text-[#DFA16C]" />
+                    Upload File Instead
+                  </button>
+
+                  {fileName && (
+                    <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white/50 rounded-[16px] border border-[#40351F]/10 shadow-sm">
+                      <FileText className="size-4 text-[#087D9D]" />
+                      <span className="text-[13px] font-semibold text-[#40351F] max-w-[120px] truncate">
+                        {fileName}
+                      </span>
+                      <button
+                        onClick={handleReset}
+                        className="text-[#40351F]/40 hover:text-rose-500 ml-1 transition cursor-pointer"
+                      >
+                        <X className="size-3.5" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+
                 <button
                   type="button"
                   onClick={runAnalysis}
-                  disabled={isAnalyzing || (!resumeText.trim() && !uploadedFile && !fileBase64)}
-                  className="w-full py-3.5 px-6 rounded-full text-sm font-semibold bg-[#111111] text-white hover:bg-[#2A2B2D] disabled:opacity-50 transition shadow-md flex items-center justify-center gap-2 cursor-pointer"
+                  disabled={
+                    isAnalyzing ||
+                    (!resumeText.trim() && !uploadedFile && !fileBase64)
+                  }
+                  className="w-full sm:w-auto flex-1 sm:flex-none py-4 px-8 rounded-[24px] text-[15px] font-bold bg-[#087D9D] text-white hover:bg-[#06657e] disabled:opacity-50 transition shadow-[0_10px_20px_rgba(8,125,157,0.2)] flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {isAnalyzing ? (
                     <>
-                      <RefreshCw className="size-4 animate-spin text-[#7DA154]" />
-                      <span>Analyzing Resume with AI Engine...</span>
+                      <RefreshCw className="size-5 animate-spin text-[#F3A33C]" />
+                      <span>Analyzing...</span>
                     </>
                   ) : (
                     <>
-                      <Sparkles className="size-4 text-[#7DA154]" />
-                      <span>Analyze Resume & Calculate ATS Score</span>
-                      <ArrowRight className="size-4" />
+                      <Sparkles className="size-5 text-[#F3A33C]" />
+                      <span>Analyze Now</span>
+                      <ArrowRight className="size-5" />
                     </>
                   )}
                 </button>
@@ -649,8 +570,8 @@ export function ResumeAnalyzer() {
                         analysisStep > idx
                           ? "text-emerald-700 font-semibold"
                           : analysisStep === idx + 1
-                          ? "text-[#111111] font-medium"
-                          : "text-zinc-400"
+                            ? "text-[#111111] font-medium"
+                            : "text-zinc-400"
                       }`}
                     >
                       <span className="flex size-4 items-center justify-center rounded-full bg-black/[0.06] text-[10px]">
@@ -689,12 +610,14 @@ export function ResumeAnalyzer() {
                           result.atsScore >= 80
                             ? "#84cc16"
                             : result.atsScore >= 65
-                            ? "#eab308"
-                            : "#f43f5e"
+                              ? "#eab308"
+                              : "#f43f5e"
                         }
                         strokeWidth="12"
                         strokeDasharray={326.7}
-                        strokeDashoffset={326.7 - (326.7 * result.atsScore) / 100}
+                        strokeDashoffset={
+                          326.7 - (326.7 * result.atsScore) / 100
+                        }
                         strokeLinecap="round"
                         fill="transparent"
                         className="transition-all duration-1000 ease-out"
@@ -719,7 +642,9 @@ export function ResumeAnalyzer() {
                       {result.parsedData.candidateName || "Candidate Profile"}
                     </h3>
                     <p className="text-xs text-zinc-500 font-medium mt-0.5">
-                      Target Role: <strong>{result.parsedData.detectedRole}</strong> • {result.parsedData.yearsExperience}
+                      Target Role:{" "}
+                      <strong>{result.parsedData.detectedRole}</strong> •{" "}
+                      {result.parsedData.yearsExperience}
                     </p>
                   </div>
                 </div>
@@ -740,8 +665,16 @@ export function ResumeAnalyzer() {
                           : "bg-white border-black/[0.1] text-[#111111] hover:bg-zinc-50"
                       }`}
                     >
-                      <Bookmark className={`size-3.5 ${hasSavedCurrent ? "fill-current text-emerald-700" : ""}`} />
-                      <span>{hasSavedCurrent ? "Saved to Profile" : isSavingScan ? "Saving..." : "Save Scan"}</span>
+                      <Bookmark
+                        className={`size-3.5 ${hasSavedCurrent ? "fill-current text-emerald-700" : ""}`}
+                      />
+                      <span>
+                        {hasSavedCurrent
+                          ? "Saved to Profile"
+                          : isSavingScan
+                            ? "Saving..."
+                            : "Save Scan"}
+                      </span>
                     </button>
                     {savedScans.length > 0 && (
                       <button
@@ -776,25 +709,33 @@ export function ResumeAnalyzer() {
               {/* Quick Stat Counters */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 pt-6 border-t border-zinc-100">
                 <div className="flex flex-col">
-                  <span className="text-xs text-zinc-400 font-medium">Critical Flaws</span>
+                  <span className="text-xs text-zinc-400 font-medium">
+                    Critical Flaws
+                  </span>
                   <span className="text-xl font-bold text-rose-600">
                     {result.flaws.length} detected
                   </span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs text-zinc-400 font-medium">Quantified Rewrites</span>
+                  <span className="text-xs text-zinc-400 font-medium">
+                    Quantified Rewrites
+                  </span>
                   <span className="text-xl font-bold text-[#111111]">
                     {result.improvements.length} ready
                   </span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs text-zinc-400 font-medium">Matched Keywords</span>
+                  <span className="text-xs text-zinc-400 font-medium">
+                    Matched Keywords
+                  </span>
                   <span className="text-xl font-bold text-emerald-700">
                     {result.atsKeywords.matched.length} verified
                   </span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs text-zinc-400 font-medium">Missing Keywords</span>
+                  <span className="text-xs text-zinc-400 font-medium">
+                    Missing Keywords
+                  </span>
                   <span className="text-xl font-bold text-amber-600">
                     {result.atsKeywords.missing.length} suggested
                   </span>
@@ -807,11 +748,31 @@ export function ResumeAnalyzer() {
               {/* Tab Navigation */}
               <div className="flex items-center overflow-x-auto border-b border-black/[0.06] bg-black/[0.01] p-2 gap-1">
                 {[
-                  { id: "flaws", label: `Flaws & Issues (${result.flaws.length})`, icon: AlertTriangle },
-                  { id: "improvements", label: `Rewrites & Fixes (${result.improvements.length})`, icon: Sparkles },
-                  { id: "keywords", label: "ATS Keyword Matcher", icon: Search },
-                  { id: "breakdown", label: "Category Scoring", icon: CheckCircle2 },
-                  { id: "profile", label: "Parsed Resume Data", icon: User },
+                  {
+                    id: "flaws",
+                    label: `Flaws & Issues (${result.flaws.length})`,
+                    icon: AlertTriangle,
+                  },
+                  {
+                    id: "improvements",
+                    label: `Rewrites & Fixes (${result.improvements.length})`,
+                    icon: Sparkles,
+                  },
+                  {
+                    id: "keywords",
+                    label: "ATS Keyword Matcher",
+                    icon: Search,
+                  },
+                  {
+                    id: "breakdown",
+                    label: "Category Scoring",
+                    icon: CheckCircle2,
+                  },
+                  {
+                    id: "profile",
+                    label: "Parsed Resume Data",
+                    icon: User,
+                  },
                 ].map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeResultTab === tab.id;
@@ -819,14 +780,18 @@ export function ResumeAnalyzer() {
                     <button
                       key={tab.id}
                       type="button"
-                      onClick={() => setActiveResultTab(tab.id as typeof activeResultTab)}
+                      onClick={() =>
+                        setActiveResultTab(tab.id as typeof activeResultTab)
+                      }
                       className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                         isActive
                           ? "bg-[#111111] text-white shadow-xs"
                           : "text-zinc-600 hover:text-black hover:bg-black/[0.03]"
                       }`}
                     >
-                      <Icon className={`size-3.5 ${isActive ? "text-[#7DA154]" : ""}`} />
+                      <Icon
+                        className={`size-3.5 ${isActive ? "text-[#7DA154]" : ""}`}
+                      />
                       <span>{tab.label}</span>
                     </button>
                   );
@@ -840,21 +805,25 @@ export function ResumeAnalyzer() {
                   <div className="space-y-6">
                     {/* Severity Filter */}
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-medium text-zinc-500">Filter by severity:</span>
-                      {(["all", "high", "medium", "low"] as const).map((sev) => (
-                        <button
-                          key={sev}
-                          type="button"
-                          onClick={() => setFlawFilter(sev)}
-                          className={`px-3 py-1 rounded-full text-xs font-semibold capitalize transition ${
-                            flawFilter === sev
-                              ? "bg-[#111111] text-white"
-                              : "bg-black/[0.04] text-zinc-600 hover:bg-black/[0.08]"
-                          }`}
-                        >
-                          {sev}
-                        </button>
-                      ))}
+                      <span className="text-xs font-medium text-zinc-500">
+                        Filter by severity:
+                      </span>
+                      {(["all", "high", "medium", "low"] as const).map(
+                        (sev) => (
+                          <button
+                            key={sev}
+                            type="button"
+                            onClick={() => setFlawFilter(sev)}
+                            className={`px-3 py-1 rounded-full text-xs font-semibold capitalize transition ${
+                              flawFilter === sev
+                                ? "bg-[#111111] text-white"
+                                : "bg-black/[0.04] text-zinc-600 hover:bg-black/[0.08]"
+                            }`}
+                          >
+                            {sev}
+                          </button>
+                        ),
+                      )}
                     </div>
 
                     {/* Flaws List */}
@@ -871,8 +840,8 @@ export function ResumeAnalyzer() {
                                   flaw.severity === "high"
                                     ? "bg-rose-100 text-rose-800 border border-rose-200"
                                     : flaw.severity === "medium"
-                                    ? "bg-amber-100 text-amber-800 border border-amber-200"
-                                    : "bg-blue-100 text-blue-800 border border-blue-200"
+                                      ? "bg-amber-100 text-amber-800 border border-amber-200"
+                                      : "bg-blue-100 text-blue-800 border border-blue-200"
                                 }`}
                               >
                                 {flaw.severity} severity
@@ -883,8 +852,12 @@ export function ResumeAnalyzer() {
                             </div>
                           </div>
 
-                          <h4 className="text-base font-bold text-[#111111]">{flaw.title}</h4>
-                          <p className="text-xs text-zinc-600 leading-relaxed">{flaw.issue}</p>
+                          <h4 className="text-base font-bold text-[#111111]">
+                            {flaw.title}
+                          </h4>
+                          <p className="text-xs text-zinc-600 leading-relaxed">
+                            {flaw.issue}
+                          </p>
 
                           <div className="rounded-xl bg-amber-500/[0.06] border border-amber-500/20 p-3 text-xs text-amber-900">
                             <strong>Why recruiters & ATS flag this: </strong>
@@ -900,8 +873,9 @@ export function ResumeAnalyzer() {
                 {activeResultTab === "improvements" && (
                   <div className="space-y-6">
                     <div className="text-xs text-zinc-500">
-                      These bullet points were transformed using the Google XYZ formula and
-                      quantified action verbs to maximize interview callbacks.
+                      These bullet points were transformed using the Google XYZ
+                      formula and quantified action verbs to maximize interview
+                      callbacks.
                     </div>
 
                     <div className="space-y-5">
@@ -911,13 +885,17 @@ export function ResumeAnalyzer() {
                           className="rounded-2xl border border-black/[0.06] p-5 sm:p-6 bg-white shadow-2xs space-y-4"
                         >
                           <div className="flex items-center justify-between">
-                            <h4 className="text-base font-bold text-[#111111]">{item.title}</h4>
+                            <h4 className="text-base font-bold text-[#111111]">
+                              {item.title}
+                            </h4>
                             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#E5ECE0] text-[#111111]">
                               {item.impact} impact
                             </span>
                           </div>
 
-                          <p className="text-xs text-zinc-600">{item.recommendation}</p>
+                          <p className="text-xs text-zinc-600">
+                            {item.recommendation}
+                          </p>
 
                           {/* Before & After Comparison */}
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -939,13 +917,20 @@ export function ResumeAnalyzer() {
                                 </span>
                                 <button
                                   type="button"
-                                  onClick={() => handleCopyRewrite(item.id, item.afterExample)}
+                                  onClick={() =>
+                                    handleCopyRewrite(
+                                      item.id,
+                                      item.afterExample,
+                                    )
+                                  }
                                   className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#111111] hover:text-emerald-800 transition cursor-pointer"
                                 >
                                   {copiedId === item.id ? (
                                     <>
                                       <Check className="size-3 text-emerald-700" />
-                                      <span className="text-emerald-700">Copied!</span>
+                                      <span className="text-emerald-700">
+                                        Copied!
+                                      </span>
                                     </>
                                   ) : (
                                     <>
@@ -984,7 +969,8 @@ export function ResumeAnalyzer() {
                         <div className="flex items-center gap-2">
                           <CheckCircle2 className="size-4 text-emerald-600" />
                           <h5 className="text-xs font-bold uppercase tracking-wider text-emerald-800">
-                            Verified Keywords ({result.atsKeywords.matched.length})
+                            Verified Keywords (
+                            {result.atsKeywords.matched.length})
                           </h5>
                         </div>
                         <div className="flex flex-wrap gap-2 pt-1">
@@ -1004,7 +990,8 @@ export function ResumeAnalyzer() {
                         <div className="flex items-center gap-2">
                           <AlertTriangle className="size-4 text-amber-500" />
                           <h5 className="text-xs font-bold uppercase tracking-wider text-amber-800">
-                            Missing Role Keywords ({result.atsKeywords.missing.length})
+                            Missing Role Keywords (
+                            {result.atsKeywords.missing.length})
                           </h5>
                         </div>
                         <div className="flex flex-wrap gap-2 pt-1">
@@ -1028,10 +1015,13 @@ export function ResumeAnalyzer() {
                     {Object.entries(result.categoryScores).map(([key, cat]) => {
                       const labels: Record<string, string> = {
                         keywordMatch: "Keyword Match & Density",
-                        formattingAndATS: "Formatting & Structure Compatibility",
-                        impactAndMetrics: "Quantified Metrics & Business Impact",
+                        formattingAndATS:
+                          "Formatting & Structure Compatibility",
+                        impactAndMetrics:
+                          "Quantified Metrics & Business Impact",
                         experienceRelevance: "Work History & Career Narrative",
-                        skillsDistribution: "Technical & Core Competency Hierarchy",
+                        skillsDistribution:
+                          "Technical & Core Competency Hierarchy",
                       };
 
                       return (
@@ -1055,14 +1045,16 @@ export function ResumeAnalyzer() {
                                 cat.score >= 80
                                   ? "bg-[#84cc16]"
                                   : cat.score >= 65
-                                  ? "bg-amber-400"
-                                  : "bg-rose-500"
+                                    ? "bg-amber-400"
+                                    : "bg-rose-500"
                               }`}
                               style={{ width: `${cat.score}%` }}
                             />
                           </div>
 
-                          <p className="text-xs text-zinc-500">{cat.feedback}</p>
+                          <p className="text-xs text-zinc-500">
+                            {cat.feedback}
+                          </p>
                         </div>
                       );
                     })}
@@ -1138,7 +1130,6 @@ export function ResumeAnalyzer() {
             </div>
           </div>
         )}
-
         {/* SAVED SCANS MODAL */}
         {showSavedModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in duration-200">
@@ -1154,7 +1145,8 @@ export function ResumeAnalyzer() {
                       Saved Resume Scans
                     </h3>
                     <p className="text-xs text-zinc-500">
-                      {savedScans.length} analysis reports stored in your full-stack account
+                      {savedScans.length} analysis reports stored in your
+                      full-stack account
                     </p>
                   </div>
                 </div>
@@ -1172,9 +1164,12 @@ export function ResumeAnalyzer() {
                 {savedScans.length === 0 ? (
                   <div className="py-12 text-center">
                     <FileText className="size-10 text-zinc-300 mx-auto mb-3" />
-                    <p className="text-sm font-medium text-zinc-600">No saved scans found</p>
+                    <p className="text-sm font-medium text-zinc-600">
+                      No saved scans found
+                    </p>
                     <p className="text-xs text-zinc-400 mt-1">
-                      Upload or paste your resume and run an analysis to save it to your account.
+                      Upload or paste your resume and run an analysis to save it
+                      to your account.
                     </p>
                   </div>
                 ) : (
@@ -1199,13 +1194,16 @@ export function ResumeAnalyzer() {
                           </p>
                         )}
                         <p className="text-[11px] text-zinc-400">
-                          {new Date(scan.createdAt).toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                            hour: "numeric",
-                            minute: "2-digit",
-                          })}
+                          {new Date(scan.createdAt).toLocaleDateString(
+                            "en-US",
+                            {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                              hour: "numeric",
+                              minute: "2-digit",
+                            },
+                          )}
                         </p>
                       </div>
 

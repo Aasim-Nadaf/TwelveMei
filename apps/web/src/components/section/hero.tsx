@@ -57,7 +57,7 @@ export function HeroSection() {
         <div className="flex justify-center mb-20">
           <a
             href="#waitlist"
-            className="px-8 py-3.5 rounded-[12px] text-[15px] font-semibold bg-[#111111] text-white hover:bg-black transition-all shadow-lg"
+            className="px-8 py-3.5 rounded-[12px] text-[15px] font-semibold bg-[#f0f0f0] text-black transition-all shadow-lg"
           >
             Join to Waitlist
           </a>
