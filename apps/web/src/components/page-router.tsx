@@ -35,8 +35,8 @@ export function PageRouter() {
     <>
       <HeroSection />
       <ResumeAnalyzer />
-      <PlatformOverviewSection />
       <BentoStatsSection />
+      <PlatformOverviewSection />
       <FinoviaPricingSection />
       <FinoviaTestimonialsSection />
       <FinoviaNewsSection />

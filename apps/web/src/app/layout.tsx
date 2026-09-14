@@ -27,6 +27,9 @@ export const metadata: Metadata = {
     description:
       "Autopilot for your Customer Support. Scale effortlessly with TwelveMei.",
   },
+  icons: {
+    icon: "./file-white.svg",
+  },
 };
 
 export default function RootLayout({
@@ -37,7 +40,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("h-full", "antialiased", "font-sans", figtree.variable, newsreader.variable)}
+      className={cn(
+        "h-full",
+        "antialiased",
+        "font-sans",
+        figtree.variable,
+        newsreader.variable,
+      )}
     >
       <body className="min-h-full flex flex-col bg-[#F2F2F2]">
         <AuthProvider>
