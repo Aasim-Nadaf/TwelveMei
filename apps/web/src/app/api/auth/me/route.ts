@@ -11,7 +11,7 @@ export async function GET() {
       return NextResponse.json({ user: null });
     }
 
-    const user = getSessionUser(token);
+    const user = await getSessionUser(token);
     if (!user) {
       return NextResponse.json({ user: null });
     }

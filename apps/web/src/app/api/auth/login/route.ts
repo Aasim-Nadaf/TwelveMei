@@ -18,11 +18,11 @@ export async function POST(req: Request) {
       );
     }
 
-    let user = getUserByEmail(email);
+    let user = await getUserByEmail(email);
 
     // If user does not exist yet (e.g. ad-hoc demo user or first-time tester), auto-register gracefully
     if (!user) {
-      user = registerUser({
+      user = await registerUser({
         name: email.split("@")[0].replace(/[._-]/g, " "),
         email,
         password: password || "password123",
@@ -30,7 +30,9 @@ export async function POST(req: Request) {
       });
     } else {
       // In production check hashed password; here check against stored password
-      if (password && user.passwordHash !== password && user.passwordHash !== "password123") {
+      const { compare } = await import("bcryptjs");
+      const isValid = await compare(password || "password123", user.passwordHash);
+      if (!isValid) {
         return NextResponse.json(
           { error: "Invalid password. Please try again." },
           { status: 401 }
@@ -38,7 +40,7 @@ export async function POST(req: Request) {
       }
     }
 
-    const token = createSession(user.id);
+    const token = await createSession(user.id);
     const safeUser = sanitizeUser(user);
 
     const response = NextResponse.json({

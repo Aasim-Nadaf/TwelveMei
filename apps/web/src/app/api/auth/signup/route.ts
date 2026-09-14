@@ -20,14 +20,14 @@ export async function POST(req: Request) {
       );
     }
 
-    const user = registerUser({
+    const user = await registerUser({
       name: name || email.split("@")[0],
       email,
       password,
       role: role || "Candidate",
     });
 
-    const token = createSession(user.id);
+    const token = await createSession(user.id);
     const safeUser = sanitizeUser(user);
 
     const response = NextResponse.json({

@@ -7,7 +7,7 @@ export function FinoviaPricingSection() {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
 
   return (
-    <section id="pricing" className="py-24 sm:py-32 bg-[#111111] text-white">
+    <section id="pricing" className="py-24 sm:py-32 bg-zinc-900 text-white">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         
         {/* Section Header */}
