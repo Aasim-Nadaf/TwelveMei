@@ -30,8 +30,8 @@ export function Header() {
             <div className="w-2.5 h-2.5 bg-[#ffffff] rounded-tr-[3px] rounded-br-[3px] rounded-tl-[1px] rounded-bl-[1px]" />
             <div className="w-2.5 h-2.5 bg-[#ffffff] rounded-bl-[3px] rounded-br-[1px] rounded-tl-[1px] rounded-tr-[3px]" />
             <div className="w-2.5 h-2.5 bg-[#000000] rounded-br-[3px] rounded-bl-[1px] rounded-tr-[1px] rounded-tl-[3px]" /> */}
-          <img src="./file.svg" alt="logo" className="invert" />
-          <span className="font-sans text-white text-[22px] tracking-tight font-semibold">
+          <img src="./file.svg" alt="logo" className="" />
+          <span className="font-sans text-black text-[22px] tracking-tight font-semibold">
             TwelveMei
           </span>
         </Link>
@@ -82,7 +82,7 @@ export function Header() {
         <div className="flex items-center">
           <Link
             href="#pricing"
-            className="px-5 py-3 rounded-xl text-[14px] font-semibold bg-[#ffffff] text-black  shadow-[0_2px_15px_-3px_rgba(8,125,157,0.3)] hover:bg-[#f0f0f0] transition-all"
+            className="px-5 py-3 rounded-full text-[14px] font-semibold bg-[#087D9D] text-white  shadow-[0_2px_15px_-3px_rgba(8,125,157,0.3)] hover:bg-[#06657e] transition-all"
           >
             Get Started
           </Link>

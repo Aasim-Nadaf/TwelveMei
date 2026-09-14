@@ -6,179 +6,164 @@ import {
   User,
   CheckCircle2,
   Search,
+  FileText,
 } from "lucide-react";
 
 export function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative pt-32 pb-32 md:pt-40 md:pb-48 overflow-hidden min-h-[90vh] flex flex-col items-center"
+      className="relative pt-32 pb-32 md:pt-40 md:pb-48 overflow-hidden min-h-[90vh] flex flex-col items-center bg-[#FFF0C4]/20"
     >
       {/* Background Image - Full height of the section, behind the transparent navbar */}
       <div
-        className="absolute inset-0 z-0 object-cover w-full h-full"
+        className="absolute inset-0 z-0 object-cover w-full h-full opacity-30"
         style={{
           backgroundImage:
-            "url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2400&auto=format&fit=crop')",
+            "url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2400&auto=format&fit=crop')", // Minimal abstract paper/light
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       />
-      {/* Subtle overlay if needed to make text readable */}
-      <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px] z-0" />
+      {/* Subtle overlay */}
+      <div className="absolute inset-0 bg-white/40 backdrop-blur-[2px] z-0" />
 
-      {/* Gradient to blend the bottom with the next section if needed */}
-      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-white to-transparent z-0" />
+      {/* Gradient to blend the bottom with the next section */}
+      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#FFF0C4] to-transparent z-0" />
 
       <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 w-full flex flex-col items-center mt-8">
         {/* Trust Badge */}
-        <div className="flex justify-center mb-6">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white shadow-sm border border-black/5 text-[12px] font-bold text-[#111111]">
-            <span>Backed by</span>
-            <span className="bg-[#FF6600] text-white px-1.5 py-0.5 rounded-sm flex items-center justify-center font-sans">
-              Y
+        <div className="flex justify-center mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white shadow-sm border border-[#40351F]/10 text-[12px] font-bold text-[#40351F]">
+            <span className="flex size-4 items-center justify-center rounded-full bg-[#FFF0C4] text-[#D98A12]">
+              <Sparkles className="size-2.5" />
             </span>
-            <span>Combinator</span>
+            <span>Intelligent Resume Optimization</span>
           </div>
         </div>
 
         {/* Main Headline */}
         <div className="text-center max-w-4xl mx-auto mb-10">
-          <h1 className="text-[3.5rem] sm:text-[4.5rem] md:text-[5rem] font-serif tracking-tight text-[#111111] leading-[1.05]">
-            Autopilot for
+          <h1 className="text-[3.5rem] sm:text-[4.5rem] md:text-[5rem] font-serif tracking-tight text-[#40351F] leading-[1.05]">
+            Outsmart the ATS.
             <br />
-            your Customer Support.
+            Land more interviews.
             <br />
-            Scale effortlessly
+            <span className="text-[#087D9D]">Effortlessly.</span>
           </h1>
         </div>
 
+        {/* Sub headline */}
+        <p className="text-center text-[#40351F]/70 text-[18px] max-w-2xl mx-auto mb-12">
+          Stop guessing why your resume gets rejected. Get instant keyword gap
+          analysis, AI-powered bullet point rewrites, and precise ATS scoring.
+        </p>
+
         {/* CTA Button */}
-        <div className="flex justify-center mb-20">
+        <div className="flex justify-center mb-24">
           <a
-            href="#waitlist"
-            className="px-8 py-3.5 rounded-[12px] text-[15px] font-semibold bg-[#f0f0f0] text-black transition-all shadow-lg"
+            href="#analyzer"
+            className="px-8 py-4 rounded-full text-[15px] font-bold bg-[#087D9D] hover:bg-[#06657e] text-white transition-all shadow-[0_10px_20px_rgba(8,125,157,0.2)]"
           >
-            Join to Waitlist
+            Analyze Resume Free
           </a>
         </div>
 
-        {/* Support Dashboard Mockup */}
-        <div className="relative mx-auto w-full max-w-[850px] bg-white/90 backdrop-blur-md rounded-[24px] p-6 sm:p-8 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-white">
-          <div className="flex flex-col sm:flex-row gap-6">
+        {/* Resume Analyzer Mockup */}
+        <div className="relative mx-auto w-full max-w-[850px] bg-white/90 backdrop-blur-md rounded-[32px] p-6 sm:p-8 shadow-[0_30px_80px_-20px_rgba(64,53,31,0.15)] border border-white">
+          <div className="flex flex-col sm:flex-row gap-8">
             {/* Left Stats Panel */}
             <div className="w-full sm:w-1/3 flex flex-col gap-6">
               <div className="flex items-center gap-3">
-                <div className="size-8 rounded-full bg-zinc-200 overflow-hidden">
-                  <img
-                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop"
-                    alt="avatar"
-                  />
+                <div className="size-10 flex items-center justify-center rounded-full bg-[#FFF0C4] text-[#D98A12]">
+                  <Sparkles className="size-5" />
                 </div>
                 <div>
-                  <div className="text-[13px] font-bold text-[#111111] leading-tight">
-                    World of Diversity
+                  <div className="text-[14px] font-bold text-[#40351F] leading-tight">
+                    Analysis Complete
                   </div>
-                  <div className="text-[11px] text-[#888888]">my space</div>
+                  <div className="text-[12px] text-[#40351F]/60">
+                    Target: Software Engineer
+                  </div>
                 </div>
               </div>
 
               <div className="space-y-4">
                 <div>
-                  <div className="flex justify-between text-[11px] text-[#A0A0A0] font-medium mb-1">
-                    <span>New leads</span>
-                    <span>23</span>
+                  <div className="flex justify-between text-[11px] text-[#40351F]/50 font-bold mb-1 uppercase tracking-wider">
+                    <span>ATS Match</span>
+                    <span className="text-[#087D9D]">High</span>
                   </div>
                   <div className="flex items-end gap-4 mt-2">
                     <div>
-                      <div className="text-[28px] text-[#7DA154] font-semibold leading-none">
-                        12
-                      </div>
-                      <div className="text-[10px] text-[#888888] mt-1">
-                        send request
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-[28px] text-[#111111] font-semibold leading-none">
-                        10
-                      </div>
-                      <div className="text-[10px] text-[#888888] mt-1">
-                        in chat now
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-[28px] text-[#B95959] font-semibold leading-none">
-                        1
-                      </div>
-                      <div className="text-[10px] text-[#888888] mt-1">
-                        close chat
+                      <div className="text-[42px] text-[#087D9D] font-serif leading-none tracking-tight">
+                        86
+                        <span className="text-[20px] text-[#087D9D]/60">%</span>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-black/5">
-                  <div className="flex justify-between text-[11px] text-[#A0A0A0] font-medium mb-1">
-                    <span>New clients</span>
-                    <span>3</span>
+                <div className="pt-4 border-t border-[#40351F]/10">
+                  <div className="flex justify-between text-[11px] text-[#40351F]/50 font-bold mb-3 uppercase tracking-wider">
+                    <span>Missing Keywords</span>
+                    <span className="text-[#D98A12]">4 Found</span>
                   </div>
-                  <div className="text-[28px] text-[#7DA154] font-semibold mt-2">
-                    23 251$
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    <span className="px-2 py-1.5 bg-[#FFF0C4] rounded-md text-[10px] font-bold text-[#40351F]/70">
+                      React
+                    </span>
+                    <span className="px-2 py-1.5 bg-[#FFF0C4] rounded-md text-[10px] font-bold text-[#40351F]/70">
+                      TypeScript
+                    </span>
+                    <span className="px-2 py-1.5 bg-[#FFF0C4] rounded-md text-[10px] font-bold text-[#40351F]/70">
+                      AWS
+                    </span>
+                    <span className="px-2 py-1.5 bg-[#FFF0C4] rounded-md text-[10px] font-bold text-[#40351F]/70">
+                      Docker
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Right Chat Panel */}
+            {/* Right Document Panel */}
             <div className="w-full sm:w-2/3 flex gap-4">
-              {/* Avatars column */}
-              <div className="flex flex-col gap-2 pt-2">
-                <div className="size-8 rounded-full bg-fuchsia-600 ring-2 ring-white"></div>
-                <div className="size-8 rounded-full bg-zinc-800 ring-2 ring-white"></div>
-                <div className="size-8 rounded-full bg-zinc-400 ring-2 ring-white"></div>
-                <div className="size-8 rounded-full bg-emerald-200 ring-2 ring-white overflow-hidden">
-                  <img
-                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop"
-                    alt="avatar"
-                  />
-                </div>
-              </div>
-
-              {/* Chat View */}
-              <div className="flex-grow bg-white rounded-[20px] p-5 shadow-sm border border-black/5 flex flex-col">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="text-[18px] font-medium text-zinc-400">
-                    Board: <span className="font-bold text-[#111111]">CRM</span>{" "}
-                    ⁽⁺⁾
+              {/* Document View */}
+              <div className="flex-grow bg-[#FFF0C4]/30 rounded-[24px] p-6 shadow-sm border border-[#40351F]/10 flex flex-col">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="text-[16px] font-bold text-[#40351F] flex items-center gap-2">
+                    <FileText className="size-4 text-[#40351F]/40" />
+                    Resume Optimization
                   </div>
+                  <span className="text-[#D98A12]">✦</span>
                 </div>
 
-                {/* Chat Message Box */}
-                <div className="bg-[#F8F9F9] rounded-[16px] p-4 flex flex-col gap-3">
+                {/* AI Suggestion Box */}
+                <div className="bg-white rounded-[20px] p-5 flex flex-col gap-4 shadow-sm border border-[#40351F]/5">
                   <div className="flex items-center justify-between">
-                    <div className="text-[12px] font-bold text-[#111111]">
-                      Marcus{" "}
-                      <span className="text-zinc-300 font-normal">
-                        #34-24515
-                      </span>
+                    <div className="text-[12px] font-bold text-[#087D9D] flex items-center gap-2">
+                      <Sparkles className="size-3.5" />
+                      AI Rewrite Suggestion
                     </div>
-                    <MessageCircle className="size-3.5 text-zinc-400" />
+                    <CheckCircle2 className="size-4 text-[#087D9D]" />
                   </div>
-                  <div className="text-[13px] text-[#555555]">
-                    Hey. I ordered yesterday. Where is it?
+
+                  <div className="text-[13px] text-[#40351F]/40 line-through">
+                    Responsible for building new features for the main
+                    application and fixing bugs.
+                  </div>
+
+                  <div className="text-[14px] text-[#40351F] font-medium leading-relaxed border-l-2 border-[#087D9D] pl-4">
+                    Spearheaded the development of 3 core features using React
+                    and TypeScript, improving user retention by 15% and
+                    resolving 40+ critical bugs.
                   </div>
 
                   <div className="flex justify-end mt-2">
-                    <div className="flex items-center gap-1.5 text-[10px] font-semibold text-zinc-400 bg-white px-2 py-1 rounded-md shadow-sm">
-                      <Search className="size-3" />
-                      <span>Order lookup</span>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-end mt-1">
-                    <div className="flex items-center gap-1.5 text-[12px] text-[#4A6430] bg-[#E5ECE0] px-3 py-1.5 rounded-[10px]">
-                      <span>Found it</span>
-                      <CheckCircle2 className="size-3.5 fill-emerald-500 text-white" />
+                    <div className="flex items-center gap-1.5 text-[12px] font-bold text-[#40351F] bg-[#FFF0C4] px-4 py-2 rounded-full cursor-pointer hover:bg-[#FFF0C4]/80 transition">
+                      <span>Apply Change</span>
+                      <CheckCircle2 className="size-3.5 text-[#087D9D]" />
                     </div>
                   </div>
                 </div>
