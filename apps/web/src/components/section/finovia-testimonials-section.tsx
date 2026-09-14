@@ -42,9 +42,11 @@ const testimonials: Testimonial[] = [
 
 export function FinoviaTestimonialsSection() {
   return (
-    <section id="testimonials" className="py-24 sm:py-32 bg-[#FBFBFC]">
+    <section
+      id="testimonials"
+      className="py-24 sm:py-32 bg-white border-t border-black/5"
+    >
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        
         <div className="text-center mb-16">
           <h2 className="text-[2.5rem] sm:text-[3.5rem] font-serif text-[#111111] tracking-tight leading-tight mb-4">
             Loved by successful candidates.
@@ -54,47 +56,49 @@ export function FinoviaTestimonialsSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {testimonials.map((testimonial) => (
-              <div
-                key={testimonial.id}
-                className="rounded-[32px] bg-white p-8 border border-black/5 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
-              >
-                <div>
-                   {/* 5-Star Rating */}
-                   <div className="flex items-center gap-1 mb-6">
-                     {[...Array(5)].map((_, i) => (
-                       <Star
-                         key={i}
-                         className="size-4 fill-amber-400 text-amber-400"
-                       />
-                     ))}
-                   </div>
-   
-                   {/* Quote */}
-                   <p className="text-[14px] text-[#555555] font-normal leading-relaxed mb-8">
-                     &ldquo;{testimonial.content}&rdquo;
-                   </p>
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+          {testimonials.map((testimonial, idx) => (
+            <div
+              key={testimonial.id}
+              className={`rounded-[32px] ${idx === 0 ? "md:col-span-8 bg-[#F8F9F9]" : "md:col-span-4 bg-white"} p-8 md:p-10 border border-black/5 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between`}
+            >
+              <div>
+                {/* 5-Star Rating */}
+                <div className="flex items-center gap-1 mb-6">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`size-4 ${idx === 0 ? "size-5" : ""} fill-[#FF6600] text-[#FF6600]`}
+                    />
+                  ))}
                 </div>
 
-                {/* User info */}
-                <div className="flex items-center gap-4">
-                  <img
-                    src={testimonial.avatar}
-                    alt={testimonial.name}
-                    className="size-10 rounded-full object-cover ring-1 ring-black/5"
-                  />
-                  <div>
-                    <h4 className="text-[14px] font-bold text-[#111111]">
-                      {testimonial.name}
-                    </h4>
-                    <p className="text-[12px] text-[#A0A0A0]">
-                      {testimonial.role}
-                    </p>
-                  </div>
+                {/* Quote */}
+                <p
+                  className={`text-[#555555] font-normal leading-relaxed mb-8 ${idx === 0 ? "text-[18px] sm:text-[22px] font-serif" : "text-[14px]"}`}
+                >
+                  &ldquo;{testimonial.content}&rdquo;
+                </p>
+              </div>
+
+              {/* User info */}
+              <div className="flex items-center gap-4">
+                <img
+                  src={testimonial.avatar}
+                  alt={testimonial.name}
+                  className={`${idx === 0 ? "size-12" : "size-10"} rounded-full object-cover ring-1 ring-black/5`}
+                />
+                <div>
+                  <h4 className="text-[14px] font-bold text-[#111111]">
+                    {testimonial.name}
+                  </h4>
+                  <p className="text-[12px] text-[#A0A0A0]">
+                    {testimonial.role}
+                  </p>
                 </div>
               </div>
-            ))}
+            </div>
+          ))}
         </div>
       </div>
     </section>
