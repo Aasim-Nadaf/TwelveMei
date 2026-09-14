@@ -7,11 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "check-types": "next typegen && tsc --noEmit",
-    "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio"
+    "check-types": "next typegen && tsc --noEmit"
   },
   "dependencies": {
+    "@repo/db": "workspace:*",
     "@base-ui/react": "^1.8.0",
     "@hugeicons/core-free-icons": "^4.3.2",
     "@hugeicons/react": "^1.1.10",

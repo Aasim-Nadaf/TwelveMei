@@ -71,7 +71,9 @@ export async function POST(req: Request) {
       const file = formData.get("file") as File | null;
       if (file && file.size > 0) {
         fileName = file.name;
-        fileMimeType = file.type || (file.name.endsWith(".pdf") ? "application/pdf" : "text/plain");
+        fileMimeType =
+          file.type ||
+          (file.name.endsWith(".pdf") ? "application/pdf" : "text/plain");
         const buffer = Buffer.from(await file.arrayBuffer());
         fileBase64 = buffer.toString("base64");
       }
@@ -85,13 +87,17 @@ export async function POST(req: Request) {
       jobDescription = body.jobDescription || "";
     }
 
-    const hasText = typeof resumeText === "string" && resumeText.trim().length > 0;
+    const hasText =
+      typeof resumeText === "string" && resumeText.trim().length > 0;
     const hasFile = typeof fileBase64 === "string" && fileBase64.length > 0;
 
     if (!hasText && !hasFile) {
       return NextResponse.json(
-        { error: "Please provide resume content or upload a resume file to analyze." },
-        { status: 400 }
+        {
+          error:
+            "Please provide resume content or upload a resume file to analyze.",
+        },
+        { status: 400 },
       );
     }
 
@@ -99,7 +105,7 @@ export async function POST(req: Request) {
     if (hasFile && fileBase64.length > 25 * 1024 * 1024) {
       return NextResponse.json(
         { error: "Resume file exceeds maximum allowed size (20MB)." },
-        { status: 413 }
+        { status: 413 },
       );
     }
 
@@ -183,8 +189,7 @@ You MUST return your output strictly in valid JSON format matching this TypeScri
 Do not enclose the response in markdown code fences (\`\`\`json). Return ONLY the raw JSON object.`;
 
         type ContentPart =
-          | { text: string }
-          | { inlineData: { mimeType: string; data: string } };
+          { text: string } | { inlineData: { mimeType: string; data: string } };
 
         const contentParts: ContentPart[] = [];
 
@@ -199,15 +204,36 @@ Do not enclose the response in markdown code fences (\`\`\`json). Return ONLY th
         }
         contentParts.push({ text: promptText });
 
-        const response = await ai.models.generateContent({
-          model: "gemini-3.8-flash",
-          contents: { parts: contentParts },
-          config: {
-            responseMimeType: "application/json",
-          },
-        });
+        let response;
+        let attempt = 0;
+        const maxRetries = 3;
 
-        const responseText = response.text || "";
+        while (attempt < maxRetries) {
+          try {
+            response = await ai.models.generateContent({
+              model: "gemini-1.5-flash",
+              contents: { parts: contentParts },
+              config: {
+                responseMimeType: "application/json",
+              },
+            });
+            break;
+          } catch (error: any) {
+            attempt++;
+            if (error?.status === 503 && attempt < maxRetries) {
+              console.warn(
+                `Gemini API 503 error (attempt ${attempt}/${maxRetries}). Retrying in ${attempt * 2} seconds...`,
+              );
+              await new Promise((resolve) =>
+                setTimeout(resolve, attempt * 2000),
+              );
+            } else {
+              throw error;
+            }
+          }
+        }
+
+        const responseText = response?.text || "";
         // Strip markdown fences if present as safe precaution
         const cleanedText = responseText
           .replace(/^```json\s*/i, "")
@@ -216,10 +242,17 @@ Do not enclose the response in markdown code fences (\`\`\`json). Return ONLY th
           .trim();
 
         const rawParsed = JSON.parse(cleanedText);
-        const normalizedResult = normalizeResult(rawParsed, effectiveText, targetRole);
+        const normalizedResult = normalizeResult(
+          rawParsed,
+          effectiveText,
+          targetRole,
+        );
         return NextResponse.json(normalizedResult);
       } catch (geminiError) {
-        console.error("Gemini API call failed, falling back to local analysis engine:", geminiError);
+        console.error(
+          "Gemini API call failed, falling back to local analysis engine:",
+          geminiError,
+        );
         // Fall back to rule-based engine below
       }
     }
@@ -230,39 +263,79 @@ Do not enclose the response in markdown code fences (\`\`\`json). Return ONLY th
   } catch (err: unknown) {
     console.error("Resume analysis error:", err);
     return NextResponse.json(
-      { error: "Failed to analyze resume. Please check the content and try again." },
-      { status: 500 }
+      {
+        error:
+          "Failed to analyze resume. Please check the content and try again.",
+      },
+      { status: 500 },
     );
   }
 }
 
-function generateHeuristicAnalysis(text: string, targetRole?: string): ResumeAnalysisResult {
+function generateHeuristicAnalysis(
+  text: string,
+  targetRole?: string,
+): ResumeAnalysisResult {
   const lower = text.toLowerCase();
 
   // Metric detection (numbers, percentages, $, etc.)
-  const metricMatches = text.match(/(\d+[\d,.]*(\s*[%kKmMbB]|\s*\+)?|\$[\d,.]+)/g) || [];
+  const metricMatches =
+    text.match(/(\d+[\d,.]*(\s*[%kKmMbB]|\s*\+)?|\$[\d,.]+)/g) || [];
   const metricCount = metricMatches.length;
 
   // Action verbs check
   const actionVerbs = [
-    "led", "developed", "architected", "optimized", "spearheaded",
-    "engineered", "reduced", "increased", "orchestrated", "automated",
-    "implemented", "designed", "scaled", "delivered", "mentored"
+    "led",
+    "developed",
+    "architected",
+    "optimized",
+    "spearheaded",
+    "engineered",
+    "reduced",
+    "increased",
+    "orchestrated",
+    "automated",
+    "implemented",
+    "designed",
+    "scaled",
+    "delivered",
+    "mentored",
   ];
   const matchedVerbs = actionVerbs.filter((v) => lower.includes(v));
 
   // Common keywords check
   const techKeywords = [
-    "react", "typescript", "javascript", "python", "node.js", "next.js",
-    "docker", "kubernetes", "aws", "cloud", "sql", "postgresql",
-    "ci/cd", "rest api", "graphql", "agile", "git", "microservices"
+    "react",
+    "typescript",
+    "javascript",
+    "python",
+    "node.js",
+    "next.js",
+    "docker",
+    "kubernetes",
+    "aws",
+    "cloud",
+    "sql",
+    "postgresql",
+    "ci/cd",
+    "rest api",
+    "graphql",
+    "agile",
+    "git",
+    "microservices",
   ];
   const matchedTech = techKeywords.filter((k) => lower.includes(k));
-  const missingTech = techKeywords.filter((k) => !lower.includes(k)).slice(0, 5);
+  const missingTech = techKeywords
+    .filter((k) => !lower.includes(k))
+    .slice(0, 5);
 
   // Email & phone extraction
-  const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
-  const phoneMatch = text.match(/(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/);
+  const emailMatch = text.match(
+    /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/,
+  );
+  const phoneMatch = text.match(
+    /(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/,
+  );
   const nameMatch = text.trim().split("\n")[0] || "Candidate";
 
   // Score calculations
@@ -284,10 +357,10 @@ function generateHeuristicAnalysis(text: string, targetRole?: string): ResumeAna
     score >= 85
       ? "Excellent"
       : score >= 70
-      ? "Good"
-      : score >= 50
-      ? "Needs Optimization"
-      : "Critical Issues";
+        ? "Good"
+        : score >= 50
+          ? "Needs Optimization"
+          : "Critical Issues";
 
   return {
     atsScore: score,
@@ -300,7 +373,8 @@ function generateHeuristicAnalysis(text: string, targetRole?: string): ResumeAna
       },
       formattingAndATS: {
         score: 82,
-        feedback: "Clean section headings detected. Ensure standard fonts and avoid multi-column tables for legacy ATS systems.",
+        feedback:
+          "Clean section headings detected. Ensure standard fonts and avoid multi-column tables for legacy ATS systems.",
       },
       impactAndMetrics: {
         score: Math.min(metricCount * 10, 88),
@@ -308,7 +382,8 @@ function generateHeuristicAnalysis(text: string, targetRole?: string): ResumeAna
       },
       experienceRelevance: {
         score: targetRole ? 78 : 84,
-        feedback: "Work history clearly presents core engineering responsibilities with chronological clarity.",
+        feedback:
+          "Work history clearly presents core engineering responsibilities with chronological clarity.",
       },
       skillsDistribution: {
         score: 80,
@@ -321,24 +396,30 @@ function generateHeuristicAnalysis(text: string, targetRole?: string): ResumeAna
         title: "Unquantified Responsibility Bullets",
         severity: "high",
         location: "Work Experience",
-        issue: "Several bullet points describe day-to-day tasks instead of measurable achievements or bottom-line outcomes.",
-        whyItMatters: "Recruiters and ATS parsers prioritize candidates who demonstrate measurable business impact rather than generic duty lists.",
+        issue:
+          "Several bullet points describe day-to-day tasks instead of measurable achievements or bottom-line outcomes.",
+        whyItMatters:
+          "Recruiters and ATS parsers prioritize candidates who demonstrate measurable business impact rather than generic duty lists.",
       },
       {
         id: "flaw_2",
         title: "Passive Voice & Weak Action Verbs",
         severity: "medium",
         location: "Project Descriptions",
-        issue: "Phrases like 'Responsible for helping with' weaken your perceived ownership and leadership scope.",
-        whyItMatters: "Strong active verbs (Spearheaded, Architected, Engineered) trigger higher relevance ratings in screening algorithms.",
+        issue:
+          "Phrases like 'Responsible for helping with' weaken your perceived ownership and leadership scope.",
+        whyItMatters:
+          "Strong active verbs (Spearheaded, Architected, Engineered) trigger higher relevance ratings in screening algorithms.",
       },
       {
         id: "flaw_3",
         title: "Missing Modern Cloud/CI-CD Credentials",
         severity: "low",
         location: "Skills Section",
-        issue: "Key DevOps and automated deployment keywords are absent or under-emphasized.",
-        whyItMatters: "85% of modern mid-to-senior job specs filter by containerization and cloud infrastructure competencies.",
+        issue:
+          "Key DevOps and automated deployment keywords are absent or under-emphasized.",
+        whyItMatters:
+          "85% of modern mid-to-senior job specs filter by containerization and cloud infrastructure competencies.",
       },
     ],
     improvements: [
@@ -346,23 +427,36 @@ function generateHeuristicAnalysis(text: string, targetRole?: string): ResumeAna
         id: "imp_1",
         title: "Transform Passive Tasks into Quantified Impact",
         impact: "high",
-        recommendation: "Apply the Google XYZ formula: 'Accomplished [X] as measured by [Y], by doing [Z]'.",
-        beforeExcerpt: "Responsible for improving page load times and fixing bugs in the frontend.",
-        afterExample: "Optimized critical rendering path and refactored state management, decreasing Core Web Vitals LCP by 42% and reducing customer bounce rates by 18%.",
+        recommendation:
+          "Apply the Google XYZ formula: 'Accomplished [X] as measured by [Y], by doing [Z]'.",
+        beforeExcerpt:
+          "Responsible for improving page load times and fixing bugs in the frontend.",
+        afterExample:
+          "Optimized critical rendering path and refactored state management, decreasing Core Web Vitals LCP by 42% and reducing customer bounce rates by 18%.",
       },
       {
         id: "imp_2",
         title: "Highlight Cross-Functional Leadership",
         impact: "medium",
-        recommendation: "Demonstrate collaboration with product, design, and executive stakeholders.",
-        beforeExcerpt: "Worked with teammates on sprint goals and code reviews.",
-        afterExample: "Spearheaded bi-weekly architectural RFCs and mentored 4 junior developers, increasing sprint velocity by 25% across 3 release cycles.",
+        recommendation:
+          "Demonstrate collaboration with product, design, and executive stakeholders.",
+        beforeExcerpt:
+          "Worked with teammates on sprint goals and code reviews.",
+        afterExample:
+          "Spearheaded bi-weekly architectural RFCs and mentored 4 junior developers, increasing sprint velocity by 25% across 3 release cycles.",
       },
     ],
     atsKeywords: {
-      matched: matchedTech.length > 0 ? matchedTech : ["TypeScript", "React", "Next.js", "REST APIs", "Git"],
-      missing: missingTech.length > 0 ? missingTech : ["Docker", "Kubernetes", "AWS", "CI/CD Pipelines", "System Design"],
-      recommendedAction: "Integrate missing keywords organically within your recent experience bullet points and designated Core Competencies section.",
+      matched:
+        matchedTech.length > 0
+          ? matchedTech
+          : ["TypeScript", "React", "Next.js", "REST APIs", "Git"],
+      missing:
+        missingTech.length > 0
+          ? missingTech
+          : ["Docker", "Kubernetes", "AWS", "CI/CD Pipelines", "System Design"],
+      recommendedAction:
+        "Integrate missing keywords organically within your recent experience bullet points and designated Core Competencies section.",
     },
     parsedData: {
       candidateName: nameMatch.length < 30 ? nameMatch : "Alex Morgan",
@@ -370,7 +464,10 @@ function generateHeuristicAnalysis(text: string, targetRole?: string): ResumeAna
       phone: phoneMatch ? phoneMatch[0] : "+1 (555) 234-5678",
       detectedRole: targetRole || "Full-Stack Software Engineer",
       yearsExperience: "4+ years",
-      topSkills: matchedTech.length > 0 ? matchedTech : ["React", "TypeScript", "Node.js", "Tailwind CSS"],
+      topSkills:
+        matchedTech.length > 0
+          ? matchedTech
+          : ["React", "TypeScript", "Node.js", "Tailwind CSS"],
     },
   };
 }
@@ -378,11 +475,12 @@ function generateHeuristicAnalysis(text: string, targetRole?: string): ResumeAna
 function normalizeResult(
   raw: any,
   fallbackText: string,
-  targetRole?: string
+  targetRole?: string,
 ): ResumeAnalysisResult {
   const fallback = generateHeuristicAnalysis(fallbackText, targetRole);
 
-  const rawScore = typeof raw.atsScore === "number" ? raw.atsScore : fallback.atsScore;
+  const rawScore =
+    typeof raw.atsScore === "number" ? raw.atsScore : fallback.atsScore;
   const atsScore = Math.min(Math.max(Math.round(rawScore), 0), 100);
 
   let tier: ResumeAnalysisResult["tier"] = "Needs Optimization";
@@ -400,65 +498,131 @@ function normalizeResult(
         : fallback.summary,
     categoryScores: {
       keywordMatch: {
-        score: Math.min(Math.max(raw.categoryScores?.keywordMatch?.score ?? fallback.categoryScores.keywordMatch.score, 0), 100),
-        feedback: raw.categoryScores?.keywordMatch?.feedback || fallback.categoryScores.keywordMatch.feedback,
+        score: Math.min(
+          Math.max(
+            raw.categoryScores?.keywordMatch?.score ??
+              fallback.categoryScores.keywordMatch.score,
+            0,
+          ),
+          100,
+        ),
+        feedback:
+          raw.categoryScores?.keywordMatch?.feedback ||
+          fallback.categoryScores.keywordMatch.feedback,
       },
       formattingAndATS: {
-        score: Math.min(Math.max(raw.categoryScores?.formattingAndATS?.score ?? fallback.categoryScores.formattingAndATS.score, 0), 100),
-        feedback: raw.categoryScores?.formattingAndATS?.feedback || fallback.categoryScores.formattingAndATS.feedback,
+        score: Math.min(
+          Math.max(
+            raw.categoryScores?.formattingAndATS?.score ??
+              fallback.categoryScores.formattingAndATS.score,
+            0,
+          ),
+          100,
+        ),
+        feedback:
+          raw.categoryScores?.formattingAndATS?.feedback ||
+          fallback.categoryScores.formattingAndATS.feedback,
       },
       impactAndMetrics: {
-        score: Math.min(Math.max(raw.categoryScores?.impactAndMetrics?.score ?? fallback.categoryScores.impactAndMetrics.score, 0), 100),
-        feedback: raw.categoryScores?.impactAndMetrics?.feedback || fallback.categoryScores.impactAndMetrics.feedback,
+        score: Math.min(
+          Math.max(
+            raw.categoryScores?.impactAndMetrics?.score ??
+              fallback.categoryScores.impactAndMetrics.score,
+            0,
+          ),
+          100,
+        ),
+        feedback:
+          raw.categoryScores?.impactAndMetrics?.feedback ||
+          fallback.categoryScores.impactAndMetrics.feedback,
       },
       experienceRelevance: {
-        score: Math.min(Math.max(raw.categoryScores?.experienceRelevance?.score ?? fallback.categoryScores.experienceRelevance.score, 0), 100),
-        feedback: raw.categoryScores?.experienceRelevance?.feedback || fallback.categoryScores.experienceRelevance.feedback,
+        score: Math.min(
+          Math.max(
+            raw.categoryScores?.experienceRelevance?.score ??
+              fallback.categoryScores.experienceRelevance.score,
+            0,
+          ),
+          100,
+        ),
+        feedback:
+          raw.categoryScores?.experienceRelevance?.feedback ||
+          fallback.categoryScores.experienceRelevance.feedback,
       },
       skillsDistribution: {
-        score: Math.min(Math.max(raw.categoryScores?.skillsDistribution?.score ?? fallback.categoryScores.skillsDistribution.score, 0), 100),
-        feedback: raw.categoryScores?.skillsDistribution?.feedback || fallback.categoryScores.skillsDistribution.feedback,
+        score: Math.min(
+          Math.max(
+            raw.categoryScores?.skillsDistribution?.score ??
+              fallback.categoryScores.skillsDistribution.score,
+            0,
+          ),
+          100,
+        ),
+        feedback:
+          raw.categoryScores?.skillsDistribution?.feedback ||
+          fallback.categoryScores.skillsDistribution.feedback,
       },
     },
-    flaws: Array.isArray(raw.flaws) && raw.flaws.length > 0
-      ? raw.flaws.map((f: any, idx: number) => ({
-          id: f.id || `flaw_${idx + 1}`,
-          title: f.title || "ATS Formatting Notice",
-          severity: ["high", "medium", "low"].includes(f.severity) ? f.severity : "medium",
-          location: f.location || "Resume Body",
-          issue: f.issue || "Potential ATS parsing ambiguity detected.",
-          whyItMatters: f.whyItMatters || "Impairs applicant tracking system keyword ranking.",
-        }))
-      : fallback.flaws,
-    improvements: Array.isArray(raw.improvements) && raw.improvements.length > 0
-      ? raw.improvements.map((imp: any, idx: number) => ({
-          id: imp.id || `imp_${idx + 1}`,
-          title: imp.title || "Strengthen Responsibility Statement",
-          impact: ["high", "medium"].includes(imp.impact) ? imp.impact : "high",
-          recommendation: imp.recommendation || "Incorporate measurable business metrics.",
-          beforeExcerpt: imp.beforeExcerpt || "Responsible for general project development tasks.",
-          afterExample: imp.afterExample || "Led development and delivery of key features, improving system performance by 25%.",
-        }))
-      : fallback.improvements,
+    flaws:
+      Array.isArray(raw.flaws) && raw.flaws.length > 0
+        ? raw.flaws.map((f: any, idx: number) => ({
+            id: f.id || `flaw_${idx + 1}`,
+            title: f.title || "ATS Formatting Notice",
+            severity: ["high", "medium", "low"].includes(f.severity)
+              ? f.severity
+              : "medium",
+            location: f.location || "Resume Body",
+            issue: f.issue || "Potential ATS parsing ambiguity detected.",
+            whyItMatters:
+              f.whyItMatters ||
+              "Impairs applicant tracking system keyword ranking.",
+          }))
+        : fallback.flaws,
+    improvements:
+      Array.isArray(raw.improvements) && raw.improvements.length > 0
+        ? raw.improvements.map((imp: any, idx: number) => ({
+            id: imp.id || `imp_${idx + 1}`,
+            title: imp.title || "Strengthen Responsibility Statement",
+            impact: ["high", "medium"].includes(imp.impact)
+              ? imp.impact
+              : "high",
+            recommendation:
+              imp.recommendation || "Incorporate measurable business metrics.",
+            beforeExcerpt:
+              imp.beforeExcerpt ||
+              "Responsible for general project development tasks.",
+            afterExample:
+              imp.afterExample ||
+              "Led development and delivery of key features, improving system performance by 25%.",
+          }))
+        : fallback.improvements,
     atsKeywords: {
-      matched: Array.isArray(raw.atsKeywords?.matched) && raw.atsKeywords.matched.length > 0
-        ? raw.atsKeywords.matched
-        : fallback.atsKeywords.matched,
+      matched:
+        Array.isArray(raw.atsKeywords?.matched) &&
+        raw.atsKeywords.matched.length > 0
+          ? raw.atsKeywords.matched
+          : fallback.atsKeywords.matched,
       missing: Array.isArray(raw.atsKeywords?.missing)
         ? raw.atsKeywords.missing
         : fallback.atsKeywords.missing,
-      recommendedAction: raw.atsKeywords?.recommendedAction || fallback.atsKeywords.recommendedAction,
+      recommendedAction:
+        raw.atsKeywords?.recommendedAction ||
+        fallback.atsKeywords.recommendedAction,
     },
     parsedData: {
-      candidateName: raw.parsedData?.candidateName || fallback.parsedData.candidateName,
+      candidateName:
+        raw.parsedData?.candidateName || fallback.parsedData.candidateName,
       email: raw.parsedData?.email || fallback.parsedData.email,
       phone: raw.parsedData?.phone || fallback.parsedData.phone,
-      detectedRole: raw.parsedData?.detectedRole || fallback.parsedData.detectedRole,
-      yearsExperience: raw.parsedData?.yearsExperience || fallback.parsedData.yearsExperience,
-      topSkills: Array.isArray(raw.parsedData?.topSkills) && raw.parsedData.topSkills.length > 0
-        ? raw.parsedData.topSkills
-        : fallback.parsedData.topSkills,
+      detectedRole:
+        raw.parsedData?.detectedRole || fallback.parsedData.detectedRole,
+      yearsExperience:
+        raw.parsedData?.yearsExperience || fallback.parsedData.yearsExperience,
+      topSkills:
+        Array.isArray(raw.parsedData?.topSkills) &&
+        raw.parsedData.topSkills.length > 0
+          ? raw.parsedData.topSkills
+          : fallback.parsedData.topSkills,
     },
   };
 }
-
