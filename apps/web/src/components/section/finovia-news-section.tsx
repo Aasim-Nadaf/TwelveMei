@@ -43,19 +43,19 @@ const articles: Article[] = [
 
 export function FinoviaNewsSection() {
   return (
-    <section id="news" className="py-24 sm:py-32 bg-[#FBFBFC] text-[#111111]">
+    <section id="news" className="py-24 sm:py-32 bg-[#FFF0C4] text-[#40351F]">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         {/* Section Heading Row */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-16">
           <div>
-            <h2 className="text-[2.5rem] sm:text-[3.5rem] font-serif text-[#111111] tracking-tight leading-tight">
+            <h2 className="text-[2.5rem] sm:text-[3.5rem] font-serif text-[#40351F] tracking-tight leading-tight">
               Insights & Updates.
             </h2>
           </div>
           <div className="mb-2">
             <a
               href="#blogs"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[16px] text-[13px] font-semibold bg-white border border-black/5 text-[#111111] hover:bg-zinc-50 shadow-sm transition-all"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[16px] text-[13px] font-semibold bg-white border border-[#40351F]/10 text-[#40351F] hover:bg-white/80 shadow-sm transition-all"
             >
               <span>View all</span>
               <ArrowRight className="size-3.5" />
@@ -64,18 +64,20 @@ export function FinoviaNewsSection() {
         </div>
 
         {/* Articles Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {articles.map((article) => (
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+          {articles.map((article, index) => (
             <article
               key={article.id}
-              className="rounded-[32px] bg-white border border-black/5 overflow-hidden shadow-sm hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] transition-all group flex flex-col justify-between p-8"
+              className={`rounded-[32px] bg-white border border-[#40351F]/10 overflow-hidden shadow-sm hover:shadow-[0_20px_60px_-15px_rgba(64,53,31,0.15)] transition-all group flex flex-col justify-between ${index === 0 ? "md:col-span-12 p-8 md:p-12 md:flex-row md:items-center gap-8" : "md:col-span-6 p-8"}`}
             >
-              <div>
-                <div className="inline-block px-3 py-1 mb-6 rounded-[8px] bg-[#E5ECE0] border border-[#7DA154]/20 text-[10px] font-bold tracking-wide uppercase text-[#4A6430]">
+              <div className={index === 0 ? "md:w-1/2" : ""}>
+                <div className="inline-block px-3 py-1 mb-6 rounded-[8px] bg-[#F3A33C]/10 border border-[#F3A33C]/20 text-[10px] font-bold tracking-wide uppercase text-[#D98A12]">
                   {article.category}
                 </div>
 
-                <div className="flex items-center gap-3 text-[12px] text-[#A0A0A0] mb-4">
+                <div
+                  className={`flex items-center gap-3 text-[12px] text-[#40351F]/50 mb-4`}
+                >
                   <span className="flex items-center gap-1">
                     <Calendar className="size-3" /> {article.date}
                   </span>
@@ -85,18 +87,28 @@ export function FinoviaNewsSection() {
                   </span>
                 </div>
 
-                <h3 className="text-[20px] font-serif font-bold text-[#111111] leading-snug group-hover:text-[#7DA154] transition-colors mb-3 line-clamp-2">
+                <h3
+                  className={`font-serif font-bold text-[#40351F] leading-snug group-hover:text-[#087D9D] transition-colors mb-3 line-clamp-2 ${index === 0 ? "text-[28px] sm:text-[32px]" : "text-[20px]"}`}
+                >
                   {article.title}
                 </h3>
 
-                <p className="text-[14px] text-[#555555] font-normal leading-relaxed line-clamp-3 mb-8">
+                <p
+                  className={`text-[#40351F]/70 font-normal leading-relaxed line-clamp-3 ${index === 0 ? "mb-0" : "mb-8 text-[14px]"}`}
+                >
                   {article.summary}
                 </p>
               </div>
 
-              <div className="pt-6 border-t border-black/5 flex items-center text-[13px] font-semibold text-[#111111] group-hover:text-[#7DA154]">
-                <span>Read Article</span>
-                <ArrowRight className="size-3.5 ml-1 transition-transform group-hover:translate-x-1" />
+              <div
+                className={`${index === 0 ? "md:w-1/3 pt-6 md:pt-0 border-t md:border-t-0 md:border-l border-[#40351F]/10 md:pl-12 flex flex-col justify-center" : "pt-6 border-t border-[#40351F]/10 flex items-center"}`}
+              >
+                <div
+                  className={`flex items-center font-semibold text-[#40351F] group-hover:text-[#087D9D] cursor-pointer ${index === 0 ? "text-[15px]" : "text-[13px]"}`}
+                >
+                  <span>Read Article</span>
+                  <ArrowRight className="size-4 ml-2 transition-transform group-hover:translate-x-1" />
+                </div>
               </div>
             </article>
           ))}

@@ -369,280 +369,122 @@ export function ResumeAnalyzer() {
   return (
     <section
       id="analyzer"
-      className="py-24 sm:py-32 border-t border-black/5 bg-[#FBFBFC]"
+      className="py-24 sm:py-32 border-t border-[#40351F]/10 bg-[#FFF0C4]/30"
     >
-      <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[16px] bg-[#F8F9F9] border border-black/5 text-[12px] font-semibold text-[#555555] mb-6 shadow-sm">
-            <span className="flex size-4 items-center justify-center rounded-full bg-[#E5ECE0] text-[#7DA154]">
-              <Sparkles className="size-2.5 stroke-[3]" />
-            </span>
-            <span>AI-Powered ATS Score & Flaw Audit</span>
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        {/* Centered Section Header */}
+        {!result && (
+          <div className="text-center max-w-3xl mx-auto mb-16 pt-8">
+            <h2 className="text-[3rem] sm:text-[4rem] font-serif text-[#40351F] tracking-tight leading-[1.1] mb-6">
+              Ready for your next role?
+            </h2>
+            <p className="text-[18px] text-[#40351F]/70 font-normal leading-relaxed">
+              Paste your resume below or upload a document to get an instant
+              AI-powered ATS analysis.
+            </p>
+            {isAuthenticated && user && (
+              <div className="mt-8 inline-flex items-center gap-2 px-4 py-2 rounded-[16px] bg-white border border-[#40351F]/10 text-[13px] font-medium text-[#40351F]/70 shadow-sm">
+                <span className="size-2 rounded-full bg-[#087D9D] animate-pulse" />
+                <span>
+                  Analyzing as <strong>{user.name}</strong> ({user.role})
+                </span>
+              </div>
+            )}
           </div>
+        )}
 
-          <h2 className="text-[2.5rem] sm:text-[3.5rem] font-serif text-[#111111] tracking-tight leading-tight mb-6">
-            Analyze & optimize your
-            <br className="hidden sm:block" /> resume with AI.
-          </h2>
-          <p className="text-[16px] sm:text-[18px] text-[#555555] font-normal leading-relaxed">
-            Upload your resume to receive instantaneous ATS compatibility
-            scoring, automated flaw audits, high-impact bullet point rewrites,
-            and keyword gap analysis.
-          </p>
-
-          {/* User state badge */}
-          {isAuthenticated && user && (
-            <div className="mt-8 inline-flex items-center gap-2 px-4 py-2 rounded-[16px] bg-white border border-black/5 text-[13px] font-medium text-[#555555] shadow-sm">
-              <span className="size-2 rounded-full bg-[#7DA154] animate-pulse" />
-              <span>
-                Analyzing as <strong>{user.name}</strong> ({user.role})
-              </span>
-            </div>
-          )}
-        </div>
-
-        {/* MAIN WORKSPACE */}
         {!result ? (
-          <div className="max-w-4xl mx-auto">
-            {/* Input Container */}
-            <div className="rounded-[32px] bg-white p-8 sm:p-12 border border-black/5 shadow-sm">
-              {/* Tab Selector & Quick Load Sample */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8 pb-6 border-b border-black/5">
-                <div className="inline-flex items-center bg-[#F8F9F9] p-1.5 rounded-[20px] border border-black/5">
-                  <button
-                    type="button"
-                    onClick={() => setActiveInputTab("upload")}
-                    className={`px-5 py-2.5 rounded-[16px] text-[13px] font-semibold transition-all cursor-pointer ${
-                      activeInputTab === "upload"
-                        ? "bg-white text-[#111111] shadow-sm border border-black/5"
-                        : "text-[#A0A0A0] hover:text-[#111111]"
-                    }`}
-                  >
-                    Upload File
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActiveInputTab("paste")}
-                    className={`px-5 py-2.5 rounded-[16px] text-[13px] font-semibold transition-all cursor-pointer ${
-                      activeInputTab === "paste"
-                        ? "bg-white text-[#111111] shadow-sm border border-black/5"
-                        : "text-[#A0A0A0] hover:text-[#111111]"
-                    }`}
-                  >
-                    Paste Text
-                  </button>
-                </div>
+          <div className="w-full max-w-4xl mx-auto">
+            {/* Unified Smart Input Block */}
+            <div className="rounded-[40px] bg-white border border-[#40351F]/10 shadow-[0_20px_60px_-15px_rgba(64,53,31,0.1)] flex flex-col overflow-hidden relative">
+              {/* Unified Smart Input Block Content */}
+              <div className="relative">
+                <textarea
+                  rows={10}
+                  value={resumeText}
+                  onChange={(e) => setResumeText(e.target.value)}
+                  placeholder="Paste your resume text here..."
+                  className="w-full bg-transparent border-none p-10 sm:p-14 text-lg sm:text-2xl font-serif resize-none focus:ring-0 placeholder:text-[#40351F]/30 text-[#40351F] leading-relaxed outline-none"
+                />
 
-                {/* Sample Resumes & Saved Scans */}
-                <div className="flex flex-wrap items-center gap-3">
+                {/* Floating Quick Actions (Top Right) */}
+                <div className="absolute top-6 right-6 flex items-center gap-2">
                   {savedScans.length > 0 && (
                     <button
                       type="button"
                       onClick={() => setShowSavedModal(true)}
-                      className="text-[13px] font-semibold px-4 py-2 rounded-[16px] bg-[#111111] text-white hover:bg-[#2A2B2D] transition cursor-pointer flex items-center gap-2"
+                      className="px-4 py-2 rounded-full bg-[#FFF0C4] text-[#40351F] hover:bg-[#FFF0C4]/80 text-[13px] font-bold transition flex items-center gap-2 shadow-sm cursor-pointer"
                     >
-                      <History className="size-4 text-[#7DA154]" />
-                      <span>Saved Scans ({savedScans.length})</span>
+                      <History className="size-4 text-[#D98A12]" />
+                      Saved Scans
                     </button>
                   )}
-                  <span className="text-[13px] text-[#A0A0A0] font-medium">
-                    Quick Test:
-                  </span>
                   <button
                     type="button"
                     onClick={() => loadSample("engineer")}
-                    className="text-[13px] font-semibold px-4 py-2 rounded-[16px] bg-[#E5ECE0] text-[#4A6430] hover:bg-[#d8e2d2] transition cursor-pointer"
+                    className="hidden sm:block px-4 py-2 rounded-full bg-[#40351F]/5 text-[#40351F]/60 hover:text-[#40351F] hover:bg-[#40351F]/10 text-[13px] font-bold transition cursor-pointer"
                   >
-                    Tech Resume
+                    Load Sample
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => loadSample("fintech")}
-                    className="text-[13px] font-semibold px-4 py-2 rounded-[16px] bg-[#F8F9F9] border border-black/5 text-[#555555] hover:bg-zinc-50 transition cursor-pointer"
-                  >
-                    Finance Resume
-                  </button>
+                </div>
+
+                {/* Character Count */}
+                <div className="absolute bottom-6 right-6 text-xs text-[#40351F]/30 font-medium">
+                  {resumeText.length} characters
                 </div>
               </div>
 
-              {/* Upload Dropzone */}
-              {activeInputTab === "upload" ? (
-                <div className="relative">
-                  <input
-                    id="resume-file-input"
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".pdf,.doc,.docx,.txt,.md,application/pdf,text/plain"
-                    onChange={handleFileUpload}
-                    className="hidden"
-                    tabIndex={-1}
-                    aria-hidden="true"
-                  />
-
-                  {fileName ? (
-                    <div className="border border-black/5 bg-[#F8F9F9] rounded-[24px] p-8 sm:p-12 text-center flex flex-col items-center gap-4 shadow-sm">
-                      <div className="size-16 rounded-[20px] bg-[#E5ECE0] text-[#7DA154] flex items-center justify-center">
-                        <CheckCircle2 className="size-8" />
-                      </div>
-                      <div>
-                        <h4 className="text-[16px] font-semibold text-[#111111] flex flex-wrap items-center justify-center gap-3">
-                          <span>{fileName}</span>
-                          {fileSizeStr && (
-                            <span className="text-[12px] px-2.5 py-1 rounded-[8px] bg-white text-[#A0A0A0] border border-black/5 font-medium">
-                              {fileSizeStr}
-                            </span>
-                          )}
-                        </h4>
-                        <p className="text-[13px] text-[#888888] mt-2">
-                          File loaded successfully • Click &quot;Analyze
-                          Resume&quot; below
-                        </p>
-                      </div>
-
-                      <div className="flex flex-wrap items-center justify-center gap-3 mt-4">
-                        <button
-                          type="button"
-                          onClick={() => fileInputRef.current?.click()}
-                          className="px-5 py-2.5 rounded-[16px] text-[13px] font-semibold bg-white border border-black/5 text-[#111111] hover:bg-zinc-50 transition shadow-sm cursor-pointer inline-flex items-center gap-2"
-                        >
-                          <Upload className="size-4" />
-                          <span>Change File</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={handleReset}
-                          className="px-4 py-2.5 text-[13px] font-semibold text-rose-600 hover:text-rose-700 transition cursor-pointer"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div
-                      onClick={() => fileInputRef.current?.click()}
-                      onDragOver={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setIsDragging(true);
-                      }}
-                      onDragEnter={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setIsDragging(true);
-                      }}
-                      onDragLeave={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setIsDragging(false);
-                      }}
-                      onDrop={handleDrop}
-                      className={`group block border-2 border-dashed rounded-[32px] p-12 sm:p-16 text-center cursor-pointer transition-all ${
-                        isDragging
-                          ? "border-[#7DA154] bg-[#E5ECE0]/30 scale-[1.01]"
-                          : "border-black/10 hover:border-black/20 bg-white hover:bg-[#FBFBFC]"
-                      }`}
-                    >
-                      <div className="flex flex-col items-center gap-4">
-                        <div
-                          className={`size-16 rounded-[20px] flex items-center justify-center transition-colors shadow-sm ${
-                            isDragging
-                              ? "bg-[#7DA154] text-white"
-                              : "bg-[#F8F9F9] border border-black/5 group-hover:bg-[#E5ECE0] text-[#111111] group-hover:text-[#4A6430]"
-                          }`}
-                        >
-                          <Upload className="size-6" />
-                        </div>
-                        <h4 className="text-[20px] font-serif font-bold text-[#111111]">
-                          {isDragging
-                            ? "Drop your resume file here!"
-                            : "Click to browse or drag & drop"}
-                        </h4>
-                        <p className="text-[14px] text-[#555555] max-w-sm">
-                          Supports PDF, DOCX, TXT, or Markdown documents (up to
-                          20MB)
-                        </p>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            fileInputRef.current?.click();
-                          }}
-                          className="mt-4 inline-flex items-center gap-2 px-6 py-3 rounded-[16px] text-[14px] font-semibold bg-[#111111] text-white hover:bg-black/90 shadow-[0_10px_20px_-10px_rgba(0,0,0,0.2)] transition cursor-pointer"
-                        >
-                          <Upload className="size-4" />
-                          <span>Select Document</span>
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div>
-                  <textarea
-                    rows={8}
-                    value={resumeText}
-                    onChange={(e) => setResumeText(e.target.value)}
-                    placeholder="Paste the full text of your resume here (Summary, Work Experience, Skills, Education)..."
-                    className="w-full p-4 rounded-2xl border border-black/[0.1] text-xs font-mono leading-relaxed bg-white text-[#111111] placeholder:text-zinc-400 focus:outline-hidden focus:border-[#111111] focus:ring-1 focus:ring-[#111111]"
-                  />
-                  <div className="flex items-center justify-between text-xs text-zinc-400 mt-1.5 px-1">
-                    <span>{resumeText.length} characters</span>
-                    {resumeText && (
-                      <button
-                        type="button"
-                        onClick={() => setResumeText("")}
-                        className="text-zinc-500 hover:text-black"
-                      >
-                        Clear text
-                      </button>
-                    )}
-                  </div>
-                </div>
-              )}
+              {/* Hidden Input */}
+              <input
+                id="resume-file-input"
+                ref={fileInputRef}
+                type="file"
+                accept=".pdf,.doc,.docx,.txt,.md,application/pdf,text/plain"
+                onChange={handleFileUpload}
+                className="hidden"
+                tabIndex={-1}
+                aria-hidden="true"
+              />
 
               {/* Optional Target Job Settings Accordion */}
-              <div className="mt-5 pt-4 border-t border-zinc-100">
+              <div className="px-10 sm:px-14 pb-6">
                 <button
                   type="button"
                   onClick={() => setShowJobDetails(!showJobDetails)}
-                  className="flex items-center gap-2 text-xs font-semibold text-[#111111] hover:text-emerald-800 transition cursor-pointer"
+                  className="flex items-center gap-2 text-[13px] font-bold text-[#40351F]/60 hover:text-[#087D9D] transition cursor-pointer"
                 >
                   <ChevronRight
-                    className={`size-3.5 transition-transform ${
+                    className={`size-4 transition-transform ${
                       showJobDetails ? "rotate-90" : ""
                     }`}
                   />
-                  <span>
-                    Target Role & Job Description (Recommended for precision
-                    scoring)
-                  </span>
+                  <span>Target Role Settings (Optional for precision)</span>
                 </button>
 
                 {showJobDetails && (
-                  <div className="mt-3 space-y-3 pt-2">
+                  <div className="mt-4 space-y-4 pt-4 border-t border-[#40351F]/10 animate-in fade-in slide-in-from-top-2">
                     <div>
-                      <label className="block text-xs font-medium text-zinc-600 mb-1">
+                      <label className="block text-[13px] font-bold text-[#40351F] mb-1.5">
                         Target Job Title
                       </label>
                       <input
                         type="text"
                         value={targetRole}
                         onChange={(e) => setTargetRole(e.target.value)}
-                        placeholder="e.g. Senior Full-Stack Engineer or Fintech Analyst"
-                        className="w-full px-3.5 py-2 rounded-xl border border-black/[0.1] text-xs text-[#111111] placeholder:text-zinc-400 focus:outline-hidden focus:border-[#111111]"
+                        placeholder="e.g. Senior Full-Stack Engineer"
+                        className="w-full px-4 py-3 rounded-2xl border border-[#40351F]/10 text-[14px] text-[#40351F] placeholder:text-[#40351F]/30 focus:outline-hidden focus:border-[#087D9D] focus:ring-1 focus:ring-[#087D9D] bg-[#F8F9F9]"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-zinc-600 mb-1">
-                        Target Job Description / Key Requirements (optional)
+                      <label className="block text-[13px] font-bold text-[#40351F] mb-1.5">
+                        Job Description Requirements
                       </label>
                       <textarea
                         rows={3}
                         value={jobDescription}
                         onChange={(e) => setJobDescription(e.target.value)}
-                        placeholder="Paste requirements, responsibilities, or must-have skills from job post..."
-                        className="w-full px-3.5 py-2 rounded-xl border border-black/[0.1] text-xs text-[#111111] placeholder:text-zinc-400 focus:outline-hidden focus:border-[#111111]"
+                        placeholder="Paste must-have skills from job post..."
+                        className="w-full px-4 py-3 rounded-2xl border border-[#40351F]/10 text-[14px] text-[#40351F] placeholder:text-[#40351F]/30 focus:outline-hidden focus:border-[#087D9D] focus:ring-1 focus:ring-[#087D9D] bg-[#F8F9F9] resize-none"
                       />
                     </div>
                   </div>
@@ -651,14 +493,40 @@ export function ResumeAnalyzer() {
 
               {/* Error Callout */}
               {error && (
-                <div className="mt-4 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
-                  <AlertTriangle className="size-4 shrink-0" />
+                <div className="mx-10 sm:mx-14 mb-6 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-[13px] font-medium flex items-center gap-3">
+                  <AlertTriangle className="size-5 shrink-0" />
                   <span>{error}</span>
                 </div>
               )}
 
-              {/* Submit Button */}
-              <div className="mt-6">
+              {/* Action Bar (Bottom) */}
+              <div className="bg-[#FFF0C4]/60 border-t border-[#40351F]/10 p-4 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-4 w-full sm:w-auto">
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-4 rounded-[24px] bg-white text-[#40351F] hover:bg-white/80 font-bold transition shadow-sm text-[14px] cursor-pointer"
+                  >
+                    <Upload className="size-5 text-[#DFA16C]" />
+                    Upload File Instead
+                  </button>
+
+                  {fileName && (
+                    <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white/50 rounded-[16px] border border-[#40351F]/10 shadow-sm">
+                      <FileText className="size-4 text-[#087D9D]" />
+                      <span className="text-[13px] font-semibold text-[#40351F] max-w-[120px] truncate">
+                        {fileName}
+                      </span>
+                      <button
+                        onClick={handleReset}
+                        className="text-[#40351F]/40 hover:text-rose-500 ml-1 transition cursor-pointer"
+                      >
+                        <X className="size-3.5" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+
                 <button
                   type="button"
                   onClick={runAnalysis}
@@ -666,18 +534,18 @@ export function ResumeAnalyzer() {
                     isAnalyzing ||
                     (!resumeText.trim() && !uploadedFile && !fileBase64)
                   }
-                  className="w-full py-3.5 px-6 rounded-full text-sm font-semibold bg-[#111111] text-white hover:bg-[#2A2B2D] disabled:opacity-50 transition shadow-md flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full sm:w-auto flex-1 sm:flex-none py-4 px-8 rounded-[24px] text-[15px] font-bold bg-[#087D9D] text-white hover:bg-[#06657e] disabled:opacity-50 transition shadow-[0_10px_20px_rgba(8,125,157,0.2)] flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {isAnalyzing ? (
                     <>
-                      <RefreshCw className="size-4 animate-spin text-[#7DA154]" />
-                      <span>Analyzing Resume with AI Engine...</span>
+                      <RefreshCw className="size-5 animate-spin text-[#F3A33C]" />
+                      <span>Analyzing...</span>
                     </>
                   ) : (
                     <>
-                      <Sparkles className="size-4 text-[#7DA154]" />
-                      <span>Analyze Resume & Calculate ATS Score</span>
-                      <ArrowRight className="size-4" />
+                      <Sparkles className="size-5 text-[#F3A33C]" />
+                      <span>Analyze Now</span>
+                      <ArrowRight className="size-5" />
                     </>
                   )}
                 </button>
@@ -900,7 +768,11 @@ export function ResumeAnalyzer() {
                     label: "Category Scoring",
                     icon: CheckCircle2,
                   },
-                  { id: "profile", label: "Parsed Resume Data", icon: User },
+                  {
+                    id: "profile",
+                    label: "Parsed Resume Data",
+                    icon: User,
+                  },
                 ].map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeResultTab === tab.id;
@@ -1258,7 +1130,6 @@ export function ResumeAnalyzer() {
             </div>
           </div>
         )}
-
         {/* SAVED SCANS MODAL */}
         {showSavedModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in duration-200">

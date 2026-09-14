@@ -54,106 +54,54 @@ export function PlatformOverviewSection() {
   return (
     <section
       id="features"
-      className="py-24 sm:py-32 bg-white text-[#111111] border-t border-black/5"
+      className="py-24 sm:py-32 bg-[#FFF0C4] text-[#40351F] border-t border-[#40351F]/10"
     >
-      <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        {/* Section Heading Row */}
-        <div className="text-center mb-16">
-          <h2 className="text-[2.5rem] sm:text-[3.5rem] font-serif text-[#111111] tracking-tight leading-tight">
-            Seamless analysis.
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        {/* Section Heading */}
+        <div className="mb-20">
+          <h2 className="text-[3rem] sm:text-[4.5rem] font-serif text-[#40351F] tracking-tight leading-[1.1] max-w-3xl">
+            Smarter analysis.
             <br />
-            Actionable insights.
+            Unfair advantage.
           </h2>
         </div>
 
-        {/* Two-Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left Column: Interactive Accordion */}
-          <div className="space-y-4">
-            {items.map((item) => {
-              const Icon = item.icon;
-              const isExpanded = activeId === item.id;
+        {/* Minimal Interactive List */}
+        <div className="flex flex-col border-t border-[#40351F]/20">
+          {items.map((item, index) => {
+            const Icon = item.icon;
 
-              return (
-                <div
-                  key={item.id}
-                  className={`rounded-[24px] transition-all duration-300 border ${
-                    isExpanded
-                      ? "bg-[#F8F9F9] border-black/5 shadow-sm"
-                      : "bg-transparent border-transparent hover:border-black/5 hover:bg-[#FBFBFC]"
-                  }`}
-                >
-                  <button
-                    type="button"
-                    onClick={() => setActiveId(isExpanded ? "" : item.id)}
-                    className="w-full flex items-center justify-between p-5 sm:p-6 text-left cursor-pointer"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div
-                        className={`size-10 rounded-2xl flex items-center justify-center shrink-0 transition-colors ${
-                          isExpanded
-                            ? "bg-[#E5ECE0] shadow-sm text-[#7DA154]"
-                            : "bg-zinc-100 text-zinc-400"
-                        }`}
-                      >
-                        <Icon className="size-5" />
-                      </div>
-                      <span
-                        className={`text-[17px] font-semibold transition-colors ${
-                          isExpanded ? "text-[#111111]" : "text-[#888888]"
-                        }`}
-                      >
-                        {item.title}
-                      </span>
-                    </div>
-                    {isExpanded ? (
-                      <ChevronUp className="size-5 text-zinc-400" />
-                    ) : (
-                      <ChevronDown className="size-5 text-zinc-400" />
-                    )}
-                  </button>
+            return (
+              <div
+                key={item.id}
+                className="group border-b border-[#40351F]/20 py-8 lg:py-12 flex flex-col lg:flex-row lg:items-center justify-between gap-6 cursor-pointer hover:bg-white/40 transition-all px-4 lg:px-8"
+              >
+                <div className="flex items-center gap-6 lg:gap-10 lg:w-1/2">
+                  <span className="text-[#40351F]/20 font-sans font-medium text-2xl lg:text-3xl">
+                    0{index + 1}
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl lg:text-4xl font-serif text-[#40351F] group-hover:text-[#087D9D] transition-colors tracking-tight">
+                    {item.title}
+                  </h3>
+                </div>
 
-                  {isExpanded && (
-                    <div className="px-6 pb-6 pt-0">
-                      <p className="text-[14px] text-[#555555] leading-relaxed pl-[3.5rem]">
-                        {item.description}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                <div className="lg:w-1/2 flex items-center justify-between pl-14 lg:pl-0">
+                  <p className="text-base lg:text-lg text-[#40351F]/70 max-w-md hidden lg:block opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out">
+                    {item.description}
+                  </p>
 
-          {/* Right Column: Visual Mockup */}
-          <div className="relative">
-            <div className="rounded-[32px] bg-[#FBFBFC] border border-black/5 p-8 shadow-sm flex flex-col items-center justify-center min-h-[400px]">
-              <div className="w-full max-w-[300px] space-y-4">
-                {/* Mockup blocks */}
-                <div className="h-16 bg-white rounded-2xl shadow-sm border border-black/5 flex items-center px-4 gap-3">
-                  <div className="size-8 rounded-full bg-zinc-100" />
-                  <div className="flex-1 space-y-2">
-                    <div className="h-2 w-1/2 bg-zinc-200 rounded-full" />
-                    <div className="h-2 w-1/3 bg-zinc-100 rounded-full" />
-                  </div>
-                </div>
-                <div className="h-16 bg-white rounded-2xl shadow-sm border border-black/5 flex items-center px-4 gap-3 ml-6 opacity-80">
-                  <div className="size-8 rounded-full bg-zinc-100" />
-                  <div className="flex-1 space-y-2">
-                    <div className="h-2 w-2/3 bg-zinc-200 rounded-full" />
-                    <div className="h-2 w-1/4 bg-zinc-100 rounded-full" />
-                  </div>
-                </div>
-                <div className="h-16 bg-[#7DA154] rounded-2xl shadow-[0_8px_20px_rgba(125,161,84,0.15)] flex items-center px-4 gap-3 -ml-4">
-                  <div className="size-8 rounded-full bg-white/20" />
-                  <div className="flex-1 space-y-2">
-                    <div className="h-2 w-1/2 bg-white/40 rounded-full" />
-                    <div className="h-2 w-3/4 bg-white/20 rounded-full" />
+                  {/* Mobile description fallback */}
+                  <p className="text-base text-[#40351F]/70 lg:hidden max-w-sm">
+                    {item.description}
+                  </p>
+
+                  <div className="hidden lg:flex size-14 rounded-full border border-[#40351F]/10 items-center justify-center group-hover:bg-[#087D9D] group-hover:border-[#087D9D] group-hover:text-white transition-all text-[#40351F]/40 shadow-sm group-hover:shadow-[0_10px_20px_rgba(8,125,157,0.2)]">
+                    <Icon className="size-6" />
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
+            );
+          })}
         </div>
       </div>
     </section>
