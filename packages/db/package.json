@@ -2,6 +2,7 @@
   "name": "@repo/db",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "exports": {
     ".": "./src/index.ts"
   },
@@ -12,12 +13,16 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@prisma/client": "^5.14.0",
-    "@types/node": "^26.5.1"
+    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/client": "^7.10.0",
+    "@types/node": "^26.5.1",
+    "dotenv": "^17.4.2",
+    "pg": "^8.23.0"
   },
   "devDependencies": {
-    "prisma": "^5.14.0",
     "@repo/typescript-config": "*",
+    "@types/pg": "^8.23.1",
+    "prisma": "^7.10.0",
     "typescript": "^5.4.5"
   }
 }
