@@ -1,9 +1,9 @@
 const productLinks = [
   { label: "Platform", href: "#hero" },
   { label: "Features", href: "#features" },
-  { label: "Integrations", href: "#services" },
+  { label: "Analyzer", href: "#analyzer" },
   { label: "Pricing", href: "#pricing" },
-  { label: "Customers", href: "#testimonials" },
+  { label: "Testimonials", href: "#testimonials" },
   { label: "Blog", href: "#news" },
 ] as const;
 
@@ -28,13 +28,16 @@ export function Footer() {
           {/* Brand and Description */}
           <div className="md:col-span-5 space-y-6">
             <div className="flex items-center gap-2">
-               <div className="size-6 bg-white rounded-md flex items-center justify-center">
-                  <span className="text-[#111111] text-[14px] font-bold">12</span>
+               <div className="grid grid-cols-2 gap-[1px]">
+                  <div className="w-2.5 h-2.5 bg-white rounded-tl-[2px] rounded-bl-[2px]" />
+                  <div className="w-2.5 h-2.5 bg-white rounded-tr-[2px] rounded-br-[2px]" />
+                  <div className="w-2.5 h-2.5 bg-white rounded-bl-[2px] rounded-br-[2px]" />
+                  <div className="w-2.5 h-2.5 bg-white rounded-br-[2px] rounded-bl-[2px]" />
                </div>
-               <span className="text-[18px] font-serif text-white font-semibold">TwelveMei</span>
+               <span className="text-[18px] font-serif text-white font-semibold">ResumeAI</span>
             </div>
             <p className="text-[14px] font-normal leading-relaxed max-w-[280px]">
-              The intelligent support platform that scales with your growing business.
+              The intelligent ATS optimization platform that helps you land more interviews.
             </p>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[12px] bg-white/5 border border-white/10 text-[11px] font-medium text-white">
               <span className="size-1.5 rounded-full bg-[#7DA154]"></span>
@@ -102,7 +105,7 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[12px]">
-          <p>© {new Date().getFullYear()} TwelveMei Inc. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} ResumeAI. All rights reserved.</p>
           <div className="flex items-center gap-4">
             <a href="#privacy" className="hover:text-white transition-colors">
               Privacy

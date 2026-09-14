@@ -2,11 +2,19 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Portal, PortalBackdrop } from "@/components/section/portal";
-import { navLinks } from "@/components/section/header";
 import { Menu, X } from "lucide-react";
+import Link from "next/link";
+import { useAuth } from "@/context/auth-context";
+
+const navLinks = [
+  { label: "Home", href: "/#" },
+  { label: "Dashboard", href: "/#dashboard" },
+  { label: "Analyzer", href: "/#analyzer" },
+];
 
 export function MobileNav() {
   const [open, setOpen] = React.useState(false);
+  const { user } = useAuth();
 
   return (
     <div className="md:hidden">
@@ -32,12 +40,12 @@ export function MobileNav() {
             data-slot={open ? "open" : "closed"}
           >
             <div className="grid gap-y-2">
-              {navLinks.map((link: { label: string; href: string }) => (
+              {navLinks.map((link) => (
                 <Button
                   className="justify-start"
                   key={link.label}
                   variant="ghost"
-                  render={<a href={link.href} />}
+                  render={<Link href={link.href} onClick={() => setOpen(false)} />}
                   nativeButton={false}
                 >
                   {link.label}
@@ -45,15 +53,23 @@ export function MobileNav() {
               ))}
             </div>
             <div className="mt-8 flex flex-col gap-2">
-              <Button
-                className="w-full"
-                variant="outline"
-                render={<a href="#login" />}
-                nativeButton={false}
-              >
-                Log in
-              </Button>
-              <Button className="w-full bg-[#0e2118] text-white">Sign Up</Button>
+              {user ? (
+                <Button
+                  className="w-full bg-[#111111] text-white"
+                  render={<Link href="/#dashboard" onClick={() => setOpen(false)} />}
+                  nativeButton={false}
+                >
+                  My Dashboard
+                </Button>
+              ) : (
+                <Button
+                  className="w-full bg-[#111111] text-white"
+                  render={<Link href="/signin" onClick={() => setOpen(false)} />}
+                  nativeButton={false}
+                >
+                  Sign In
+                </Button>
+              )}
             </div>
           </div>
         </Portal>

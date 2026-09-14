@@ -52,12 +52,12 @@ export function PlatformOverviewSection() {
   const [activeId, setActiveId] = useState<string>("keyword-gap");
 
   return (
-    <section id="features" className="py-24 sm:py-32">
+    <section id="features" className="py-24 sm:py-32 bg-[#111111] text-white">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         
         {/* Section Heading Row */}
         <div className="text-center mb-16">
-          <h2 className="text-[2.5rem] sm:text-[3.5rem] font-serif text-[#111111] tracking-tight leading-tight">
+          <h2 className="text-[2.5rem] sm:text-[3.5rem] font-serif text-white tracking-tight leading-tight">
             Seamless analysis.<br />
             Actionable insights.
           </h2>
@@ -76,8 +76,8 @@ export function PlatformOverviewSection() {
                   key={item.id}
                   className={`rounded-[24px] transition-all duration-300 border ${
                     isExpanded
-                      ? "bg-[#F8F9F9] border-black/5 shadow-sm"
-                      : "bg-white border-transparent hover:border-black/5"
+                      ? "bg-white/5 border-white/10 shadow-sm"
+                      : "bg-transparent border-transparent hover:border-white/5"
                   }`}
                 >
                   <button
@@ -89,30 +89,30 @@ export function PlatformOverviewSection() {
                       <div
                         className={`size-10 rounded-2xl flex items-center justify-center shrink-0 transition-colors ${
                           isExpanded
-                            ? "bg-white shadow-sm text-[#7DA154]"
-                            : "bg-[#F8F9F9] text-[#A0A0A0]"
+                            ? "bg-white/10 shadow-sm text-[#E5ECE0]"
+                            : "bg-white/5 text-white/40"
                         }`}
                       >
                         <Icon className="size-5" />
                       </div>
                       <span
                         className={`text-[17px] font-semibold transition-colors ${
-                          isExpanded ? "text-[#111111]" : "text-[#555555]"
+                          isExpanded ? "text-white" : "text-white/60"
                         }`}
                       >
                         {item.title}
                       </span>
                     </div>
                     {isExpanded ? (
-                      <ChevronUp className="size-5 text-[#A0A0A0]" />
+                      <ChevronUp className="size-5 text-white/40" />
                     ) : (
-                      <ChevronDown className="size-5 text-[#A0A0A0]" />
+                      <ChevronDown className="size-5 text-white/40" />
                     )}
                   </button>
 
                   {isExpanded && (
                     <div className="px-6 pb-6 pt-0">
-                      <p className="text-[14px] text-[#888888] leading-relaxed pl-[3.5rem]">
+                      <p className="text-[14px] text-white/60 leading-relaxed pl-[3.5rem]">
                         {item.description}
                       </p>
                     </div>
@@ -124,24 +124,24 @@ export function PlatformOverviewSection() {
 
           {/* Right Column: Visual Mockup */}
           <div className="relative">
-            <div className="rounded-[32px] bg-[#F8F9F9] border border-black/5 p-8 shadow-sm flex flex-col items-center justify-center min-h-[400px]">
+            <div className="rounded-[32px] bg-white/5 border border-white/10 p-8 shadow-sm flex flex-col items-center justify-center min-h-[400px]">
                <div className="w-full max-w-[300px] space-y-4">
                   {/* Mockup blocks */}
-                  <div className="h-16 bg-white rounded-2xl shadow-sm border border-black/5 flex items-center px-4 gap-3">
-                     <div className="size-8 rounded-full bg-[#E5ECE0]" />
+                  <div className="h-16 bg-[#1A1A1A] rounded-2xl shadow-sm border border-white/5 flex items-center px-4 gap-3">
+                     <div className="size-8 rounded-full bg-[#E5ECE0]/20" />
                      <div className="flex-1 space-y-2">
-                        <div className="h-2 w-1/2 bg-[#E5ECE0] rounded-full" />
-                        <div className="h-2 w-1/3 bg-[#F0F0F0] rounded-full" />
+                        <div className="h-2 w-1/2 bg-[#E5ECE0]/40 rounded-full" />
+                        <div className="h-2 w-1/3 bg-white/10 rounded-full" />
                      </div>
                   </div>
-                  <div className="h-16 bg-white rounded-2xl shadow-sm border border-black/5 flex items-center px-4 gap-3 ml-6 opacity-80">
-                     <div className="size-8 rounded-full bg-[#E5ECE0]" />
+                  <div className="h-16 bg-[#1A1A1A] rounded-2xl shadow-sm border border-white/5 flex items-center px-4 gap-3 ml-6 opacity-80">
+                     <div className="size-8 rounded-full bg-[#E5ECE0]/20" />
                      <div className="flex-1 space-y-2">
-                        <div className="h-2 w-2/3 bg-[#E5ECE0] rounded-full" />
-                        <div className="h-2 w-1/4 bg-[#F0F0F0] rounded-full" />
+                        <div className="h-2 w-2/3 bg-[#E5ECE0]/40 rounded-full" />
+                        <div className="h-2 w-1/4 bg-white/10 rounded-full" />
                      </div>
                   </div>
-                  <div className="h-16 bg-[#7DA154] rounded-2xl shadow-[0_8px_20px_rgba(125,161,84,0.3)] flex items-center px-4 gap-3 -ml-4">
+                  <div className="h-16 bg-[#7DA154] rounded-2xl shadow-[0_8px_20px_rgba(125,161,84,0.15)] flex items-center px-4 gap-3 -ml-4">
                      <div className="size-8 rounded-full bg-white/20" />
                      <div className="flex-1 space-y-2">
                         <div className="h-2 w-1/2 bg-white/40 rounded-full" />

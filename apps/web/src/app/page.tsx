@@ -1,12 +1,6 @@
 import { Header } from "@/components/section/header";
-import { HeroSection } from "@/components/section/hero";
-import { ResumeAnalyzer } from "@/components/resume/resume-analyzer";
-import { PlatformOverviewSection } from "@/components/section/platform-overview-section";
-import { BentoStatsSection } from "@/components/section/bento-stats-section";
-import { FinoviaPricingSection } from "@/components/section/finovia-pricing-section";
-import { FinoviaTestimonialsSection } from "@/components/section/finovia-testimonials-section";
-import { FinoviaNewsSection } from "@/components/section/finovia-news-section";
 import { Footer } from "@/components/section/footer";
+import { PageRouter } from "@/components/page-router";
 
 export default function Page() {
   return (
@@ -14,13 +8,7 @@ export default function Page() {
       <div className="relative flex-grow bg-white rounded-[40px] overflow-hidden flex flex-col shadow-sm border border-black/5">
         <Header />
         <main className="grow relative z-10">
-          <HeroSection />
-          <ResumeAnalyzer />
-          <PlatformOverviewSection />
-          <BentoStatsSection />
-          <FinoviaPricingSection />
-          <FinoviaTestimonialsSection />
-          <FinoviaNewsSection />
+          <PageRouter />
         </main>
         <Footer />
       </div>
